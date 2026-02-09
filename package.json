@@ -1,0 +1,16 @@
+{
+  "name": "project-smore-root",
+  "version": "1.0.0",
+  "scripts": {
+    "dev:backend": ".\\.venv\\Scripts\\python.exe -m uvicorn backend.main:app --reload",
+    "dev:frontend": "npm run dev --prefix frontend",
+    "dev": "concurrently \"npm run dev:backend\" \"npm run dev:frontend\"",
+    "install:frontend": "npm install --prefix frontend",
+    "install:backend": ".\\.venv\\Scripts\\pip.exe install -r backend/requirements.txt",
+    "test:backend": ".\\.venv\\Scripts\\python.exe -m pytest",
+    "test:frontend": "npm test --prefix frontend"
+  },
+  "devDependencies": {
+    "concurrently": "^9.2.1"
+  }
+}
