@@ -1,5 +1,4 @@
-import { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useState, useEffect, useMemo } from 'react';
 import { ChevronRight, ChevronLeft, AlertCircle } from 'lucide-react';
 import { clsx } from 'clsx';
 import { twMerge } from 'tailwind-merge';
@@ -39,7 +38,11 @@ async function postSubmission(data: PlayerSubmission) {
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(data),
   });
-  if (!res.ok) throw new Error('Failed to submit survey');
+  if (!res.ok) {
+      const errorData = await res.json().catch(() => ({}));
+      console.error("Submission Error Response:", errorData);
+      throw new Error(JSON.stringify(errorData.detail || 'Failed to submit survey'));
+  }
   return res.json();
 }
 
@@ -58,8 +61,8 @@ const ErrorMsg = ({ field, errors }: { field: string; errors: Record<string, str
 };
 
 export default function SurveyWizard() {
-  const navigate = useNavigate();
   const [currentStep, setCurrentStep] = useState(0);
+  const [isSuccess, setIsSuccess] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [errors, setErrors] = useState<Record<string, string>>({});
   
@@ -70,12 +73,12 @@ export default function SurveyWizard() {
   // Form State
   const [formData, setFormData] = useState<Partial<PlayerSubmission>>({
     player_id: localStorage.getItem('player_id') || uuidv4(),
-    suitability_rating: 3,
-    resistance_feel: 0,
-    brightness_feel: 0,
-    strength_rating: 0,
-    min_dynamic: 3, // ~p 
-    max_dynamic: 6, // ~f
+    suitability_rating: undefined,
+    resistance_feel: undefined,
+    brightness_feel: undefined,
+    strength_rating: undefined,
+    min_dynamic: undefined, 
+    max_dynamic: undefined,
     is_mouthpiece_modified: false,
     is_reed_modified: false
   });
@@ -111,10 +114,36 @@ export default function SurveyWizard() {
     return mouthpieces.find(m => m.manufacturer === mfg && (m.model + (m.variant ? ` ${m.variant}` : "") === modelStr));
   };
   const activeMouthpiece = getMouthpieceObj(selectedMpcMfg, selectedMpcModel);
-  // Filter out potential empty/invalid tip openings to prevent UI ghosts
-  const validTipOpenings = activeMouthpiece?.tip_openings.filter(t => t.id && t.label && t.label.trim() !== "") || [];
-  const selectedTip = validTipOpenings.find(t => t.id === formData.tip_opening_id);
   
+  // Filter tip openings by selected instrument to avoid cross-instrument specs
+  const instrumentTips = useMemo(() => {
+    if (!activeMouthpiece || !formData.instrument) return [];
+    return activeMouthpiece.tip_openings.filter(t => t.instrument === formData.instrument);
+  }, [activeMouthpiece, formData.instrument]);
+
+  // Filter out potential empty/invalid tip openings to prevent UI ghosts
+  const validTipOpenings = useMemo(() => {
+    return instrumentTips.filter(t => t.id && t.label && t.label.trim() !== "");
+  }, [instrumentTips]);
+  
+  // Find selected tip in ALL openings for this mouthpiece (in case ID is already set)
+  const selectedTip = activeMouthpiece?.tip_openings?.find(t => t.id === formData.tip_opening_id);
+  
+  // Auto-select tip opening if logic dictates (ONLY from instrument-compatible tips)
+  useEffect(() => {
+    if (activeMouthpiece && !formData.tip_opening_id && formData.instrument) {
+        // Case A: Only one valid visible option for this instrument
+        if (validTipOpenings.length === 1) {
+             // eslint-disable-next-line
+             setFormData(prev => ({ ...prev, tip_opening_id: validTipOpenings[0].id }));
+        } 
+        // Case B: No "valid" label options, but exactly one raw option for this instrument (e.g. fixed facing)
+        else if (validTipOpenings.length === 0 && instrumentTips.length === 1) {
+             setFormData(prev => ({ ...prev, tip_opening_id: instrumentTips[0].id }));
+        }
+    }
+  }, [activeMouthpiece, validTipOpenings, instrumentTips, formData.tip_opening_id, formData.instrument]);
+
   const uniqueReedMfgs = Array.from(new Set(reeds.map(r => r.manufacturer))).sort();
   const [selectedReedMfg, setSelectedReedMfg] = useState<string>('');
   const [selectedReedModel, setSelectedReedModel] = useState<string>('');
@@ -136,19 +165,33 @@ export default function SurveyWizard() {
     let isValid = true;
 
     if (step === 0) {
-        if (!formData.instrument) newErrors.instrument = "Please select your instrument.";
-        if (!formData.genre) newErrors.genre = "Please select your primary genre.";
         if (!formData.skill_level) newErrors.skill_level = "Please select your skill level.";
         if (!formData.player_hours) newErrors.player_hours = "Please select your average playing hours.";
     }
 
     if (step === 1) {
+        if (!formData.instrument) newErrors.instrument = "Please select your instrument.";
+        if (!formData.genre) newErrors.genre = "Please select your primary genre.";
+
         if (!selectedMpcMfg) newErrors.mpcMfg = "Manufacturer is required.";
         if (!selectedMpcModel) newErrors.mpcModel = "Model is required.";
-        // Special case: Some mouthpieces (like Selmer Concept) might not have selectable tip openings in our DB yet,
-        // or they are 'one size'. We only require tip opening if the active mouthpiece HAS options.
-        if (activeMouthpiece && validTipOpenings.length > 0 && !formData.tip_opening_id) {
-            newErrors.tipOpening = "Tip opening is required for this model.";
+        
+        // Strict Tip Opening Validation
+        // If the database has tip openings (even if unlabelled), we MUST have a selection.
+        if (activeMouthpiece) {
+             const totalTips = activeMouthpiece.tip_openings.length;
+             // Check if there are any tips FOR THIS INSTRUMENT
+             const compatibleTips = activeMouthpiece.tip_openings.filter(t => t.instrument === formData.instrument);
+
+             if (totalTips === 0) {
+                 // If the DB has NO tip openings for this model, we can't submit valid data.
+                 newErrors.tipOpening = "Configuration Error: This model has no tip openings defined in the database.";
+             } else if (compatibleTips.length === 0) {
+                 // If no tips for the selected instrument
+                 newErrors.tipOpening = `This model is not available for ${formData.instrument}.`;
+             } else if (!formData.tip_opening_id) {
+                 newErrors.tipOpening = "Tip opening is required for this model.";
+             }
         }
     }
 
@@ -158,9 +201,16 @@ export default function SurveyWizard() {
         if (!formData.reed_id) newErrors.reedStrength = "Reed strength is required.";
     }
 
-    // Step 3 (Ratings) are mostly sliders with defaults, but we ensure range validity
+    // Step 3 (Ratings)
     if (step === 3) {
-        if ((formData.min_dynamic || 0) > (formData.max_dynamic || 8)) {
+        if (formData.suitability_rating === undefined) newErrors.suitability = "Please rate the overall match.";
+        if (formData.resistance_feel === undefined) newErrors.resistance = "Please rate the resistance.";
+        if (formData.strength_rating === undefined) newErrors.strength = "Please rate the strength match.";
+        if (formData.brightness_feel === undefined) newErrors.brightness = "Please rate the tone color.";
+
+        if (formData.min_dynamic === undefined || formData.max_dynamic === undefined) {
+             newErrors.dynamics = "Please set the dynamic range.";
+        } else if ((formData.min_dynamic) > (formData.max_dynamic)) {
             newErrors.dynamics = "Min volume cannot be louder than max volume.";
         }
     }
@@ -196,17 +246,79 @@ export default function SurveyWizard() {
     
     try {
       await postSubmission(formData as PlayerSubmission);
-      // Reset or redirect
-      alert("Submission successful! Thank you.");
-      navigate('/'); 
-    } catch (e) {
-      console.error(e);
-      alert("Error submitting data. Please try again.");
+      setIsSuccess(true);
+      window.scrollTo(0, 0);
+    } catch (err) {
+        console.error(err);
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        const e = err as any;
+        const msg = e.response?.data?.detail || e.message || "Failed to submit";
+        // Show detailed error in alert so user knows what's wrong (e.g. 422)
+        alert(`Error submitting survey: ${typeof msg === 'object' ? JSON.stringify(msg, null, 2) : msg}`);
     }
   };
 
+  const handleReset = () => {
+      setIsSuccess(false);
+      setCurrentStep(0);
+      setFormData({
+        player_id: formData.player_id,
+        suitability_rating: undefined,
+        resistance_feel: undefined,
+        brightness_feel: undefined,
+        strength_rating: undefined,
+        min_dynamic: undefined, 
+        max_dynamic: undefined,
+        is_mouthpiece_modified: false,
+        is_reed_modified: false,
+        comments: '',
+        modification_details: ''
+      });
+      setSelectedMpcMfg('');
+      setSelectedMpcModel('');
+      setSelectedReedMfg('');
+      setSelectedReedModel('');
+  };
+
+
 
   if (isLoading) return <div className="flex h-screen items-center justify-center text-slate-500">Loading survey options...</div>;
+
+  if (isSuccess) {
+      return (
+        <div className="min-h-screen bg-slate-50 py-12 px-4 flex items-center justify-center">
+             <div className="max-w-xl w-full bg-white rounded-2xl shadow-xl p-8 text-center animate-in fade-in zoom-in-95 duration-300">
+                <div className="w-16 h-16 bg-green-100 text-green-600 rounded-full flex items-center justify-center mx-auto mb-6">
+                    <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" /></svg>
+                </div>
+                <h2 className="text-3xl font-bold text-slate-900 mb-4">Thank you for contributing!</h2>
+                <div className="text-left bg-slate-50 rounded-lg p-6 mb-8 border border-slate-100">
+                    <p className="text-sm text-slate-500 uppercase tracking-wide font-semibold mb-2">You submitted</p>
+                    <p className="text-lg text-slate-800 font-medium mb-1">
+                        {activeMouthpiece?.manufacturer} {activeMouthpiece?.model} {selectedTip?.label ? `- ${selectedTip.label}` : ''}
+                    </p>
+                    <p className="text-lg text-slate-800 font-medium">
+                        {selectedReedMfg} {selectedReedModel} {formData.reed_id ? reeds.find(r => r.id === formData.reed_id)?.strength_label : ''}
+                    </p>
+                </div>
+                <div className="flex flex-col space-y-3 sm:flex-row sm:space-y-0 sm:space-x-4 justify-center">
+                    <button 
+                        onClick={handleReset}
+                        className="bg-indigo-600 text-white px-6 py-3 rounded-xl font-bold hover:bg-indigo-700 transition-colors shadow-lg hover:shadow-indigo-200"
+                    >
+                        Submit another setup
+                    </button>
+                    <a 
+                        href="/" 
+                        className="bg-white text-slate-700 border border-slate-200 px-6 py-3 rounded-xl font-bold hover:bg-slate-50 transition-colors"
+                    >
+                        Back to main menu
+                    </a>
+                </div>
+             </div>
+        </div>
+      );
+  }
 
   return (
     <div className="min-h-screen bg-slate-50 py-12 px-4 sm:px-6 lg:px-8 font-sans text-slate-900">
@@ -248,44 +360,6 @@ export default function SurveyWizard() {
                     </h2>
                     
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        <label className="block">
-                            <span className="text-slate-700 font-medium">Instrument <span className="text-red-500">*</span></span>
-                            <select 
-                                className={cn(
-                                    "mt-1 block w-full rounded-md border-slate-300 bg-slate-50 p-2.5 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 transition-colors",
-                                    errors.instrument && "border-red-300 focus:border-red-500 focus:ring-red-500 bg-red-50"
-                                )}
-                                value={formData.instrument || ''}
-                                onChange={e => {
-                                    setFormData({...formData, instrument: e.target.value as InstrumentType});
-                                    if(errors.instrument) setErrors({...errors, instrument: ''});
-                                }}
-                            >
-                                <option value="">Select Instrument</option>
-                                {Object.values(InstrumentType).map(v => <option key={v} value={v}>{v}</option>)}
-                            </select>
-                            <ErrorMsg field="instrument" errors={errors} />
-                        </label>
-
-                        <label className="block">
-                            <span className="text-slate-700 font-medium">Primary Genre <span className="text-red-500">*</span></span>
-                            <select 
-                                className={cn(
-                                    "mt-1 block w-full rounded-md border-slate-300 bg-slate-50 p-2.5 shadow-sm transition-colors",
-                                    errors.genre && "border-red-300 focus:border-red-500 focus:ring-red-500 bg-red-50"
-                                )}
-                                value={formData.genre || ''}
-                                onChange={e => {
-                                    setFormData({...formData, genre: e.target.value as Genre});
-                                    if(errors.genre) setErrors({...errors, genre: ''});
-                                }}
-                            >
-                                <option value="">Select Genre</option>
-                                {Object.values(Genre).map(v => <option key={v} value={v}>{v}</option>)}
-                            </select>
-                            <ErrorMsg field="genre" errors={errors} />
-                        </label>
-
                         <label className="block">
                             <span className="text-slate-700 font-medium">Skill Level <span className="text-red-500">*</span></span>
                             <select 
@@ -339,6 +413,62 @@ export default function SurveyWizard() {
                     </h2>
                     
                     <div className="space-y-5">
+                         <label className="block">
+                            <span className="text-slate-700 font-medium">Instrument <span className="text-red-500">*</span></span>
+                            <select 
+                                className={cn(
+                                    "mt-1 block w-full rounded-md border-slate-300 bg-slate-50 p-2.5 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 transition-colors",
+                                    errors.instrument && "border-red-300 focus:border-red-500 focus:ring-red-500 bg-red-50"
+                                )}
+                                value={formData.instrument || ''}
+                                onChange={e => {
+                                    setFormData({...formData, instrument: e.target.value as InstrumentType});
+                                    if(errors.instrument) setErrors({...errors, instrument: ''});
+                                }}
+                            >
+                                <option value="">Select Instrument</option>
+                                {Object.values(InstrumentType).map(v => <option key={v} value={v}>{v}</option>)}
+                            </select>
+                            <ErrorMsg field="instrument" errors={errors} />
+                        </label>
+
+                        <label className="block">
+                            <span className="text-slate-700 font-medium">Setup Primary Genre <span className="text-red-500">*</span></span>
+                            <select 
+                                className={cn(
+                                    "mt-1 block w-full rounded-md border-slate-300 bg-slate-50 p-2.5 shadow-sm transition-colors",
+                                    errors.genre && "border-red-300 focus:border-red-500 focus:ring-red-500 bg-red-50"
+                                )}
+                                value={formData.genre || ''}
+                                onChange={e => {
+                                    setFormData({...formData, genre: e.target.value as Genre});
+                                    if(errors.genre) setErrors({...errors, genre: ''});
+                                }}
+                            >
+                                <option value="">Select Genre</option>
+                                {Object.values(Genre).map(v => <option key={v} value={v}>{v}</option>)}
+                            </select>
+                            <ErrorMsg field="genre" errors={errors} />
+                        </label>
+
+                        {formData.genre && (
+                            <label className="block animate-in fade-in">
+                                <span className="text-slate-700 font-medium">Sub-Genre</span>
+                                <select
+                                    className="mt-1 block w-full rounded-md border-slate-300 bg-slate-50 p-2.5 shadow-sm"
+                                    value={formData.sub_genre || ''}
+                                    onChange={e => setFormData({...formData, sub_genre: e.target.value})}
+                                >
+                                    <option value="">Select Sub-Genre</option>
+                                    {formData.genre === "Jazz" && ["Bebop", "Swing", "Modern", "Fusion", "Big Band"].map(s => <option key={s} value={s}>{s}</option>)}
+                                    {formData.genre === "Classical" && ["Solo", "Chamber", "Orchestral", "Concert Band"].map(s => <option key={s} value={s}>{s}</option>)}
+                                    {formData.genre === "Pop" && ["Rock", "R&B", "Soul"].map(s => <option key={s} value={s}>{s}</option>)}
+                                    {formData.genre === "Funk" && ["Funk", "Soul", "R&B"].map(s => <option key={s} value={s}>{s}</option>)}
+                                    <option value="Other">Other</option>
+                                </select>
+                            </label>
+                        )}
+
                         <label className="block">
                             <span className="text-slate-700 font-medium">Manufacturer <span className="text-red-500">*</span></span>
                             <select 
@@ -370,9 +500,23 @@ export default function SurveyWizard() {
                                 disabled={!selectedMpcMfg}
                                 value={selectedMpcModel}
                                 onChange={e => {
-                                    setSelectedMpcModel(e.target.value);
-                                    const mpc = getMouthpieceObj(selectedMpcMfg, e.target.value);
-                                    setFormData(prev => ({...prev, mouthpiece_id: mpc?.id, tip_opening_id: undefined}));
+                                    const val = e.target.value;
+                                    setSelectedMpcModel(val);
+                                    const mpc = getMouthpieceObj(selectedMpcMfg, val);
+                                    
+                                    // Auto-select logic
+                                    let autoTipId: string | undefined = undefined;
+                                    if (mpc && formData.instrument) {
+                                        const instTips = mpc.tip_openings.filter(t => t.instrument === formData.instrument);
+                                        const validTips = instTips.filter(t => t.id && t.label && t.label.trim() !== "");
+                                        if (validTips.length === 1) {
+                                            autoTipId = validTips[0].id;
+                                        } else if (validTips.length === 0 && instTips.length === 1) {
+                                            autoTipId = instTips[0].id;
+                                        }
+                                    }
+
+                                    setFormData(prev => ({...prev, mouthpiece_id: mpc?.id, tip_opening_id: autoTipId}));
                                     setErrors(p => ({...p, mpcModel: '', tipOpening: ''}));
                                 }}
                             >
@@ -408,7 +552,7 @@ export default function SurveyWizard() {
                                 {selectedTip && (
                                     <div className="mt-3 flex items-center p-3 bg-indigo-50 border border-indigo-100 rounded-lg text-sm text-indigo-700">
                                         <span className="font-semibold mr-2">Specs:</span>
-                                        {selectedTip.opening_inch}" ({ (selectedTip.opening_inch * 25.4).toFixed(2) } mm)
+                                        {selectedTip.opening_inch.toFixed(3)}" ({ (selectedTip.opening_inch * 25.4).toFixed(2) } mm)
                                         {selectedTip.facing_length && <span className="mx-2">•</span>}
                                         {selectedTip.facing_length && <span>Facing: {selectedTip.facing_length}</span>}
                                     </div>
@@ -418,7 +562,16 @@ export default function SurveyWizard() {
                         {/* Fallback for models like Selmer Concept which might have 0 tip openings in DB but are valid */}
                         {activeMouthpiece && validTipOpenings.length === 0 && (
                              <div className="mt-2 text-sm text-slate-500 italic">
-                                Note: This model has a standard facing. No tip selection needed.
+                                {instrumentTips.length > 0 ? (
+                                    <div className="mt-3 flex items-center p-3 bg-indigo-50 border border-indigo-100 rounded-lg text-sm text-indigo-700">
+                                        <span className="font-semibold mr-2">Standard Specs:</span>
+                                        {instrumentTips[0].opening_inch.toFixed(3)}" ({ (instrumentTips[0].opening_inch * 25.4).toFixed(2) } mm)
+                                        {instrumentTips[0].facing_length && <span className="mx-2">•</span>}
+                                        {instrumentTips[0].facing_length && <span>Facing: {instrumentTips[0].facing_length}</span>}
+                                    </div>
+                                ) : (
+                                    "Note: This model has a standard facing. No tip selection needed."
+                                )}
                              </div>
                         )}
 
@@ -525,36 +678,111 @@ export default function SurveyWizard() {
                 </div>
             )}
 
-            {/* Step 4: Ratings */}
+            {/* Step 4: Evaluation */}
             {currentStep === 3 && (
                 <div className="space-y-8 animate-in fade-in slide-in-from-right-4 duration-300">
                     <h2 className="text-2xl font-bold mb-4 flex items-center">
                          <span className="bg-indigo-100 text-indigo-700 w-8 h-8 rounded-full flex items-center justify-center text-sm mr-3">4</span>
-                        Final Impressions
+                        Evaluation
                     </h2>
-                    
-                    {/* Suitability */}
-                    <div className="space-y-4">
+
+                    {/* 1. Overall Match (Suitability) */}
+                    <div className="space-y-4 pt-2">
                         <div className="flex justify-between items-baseline">
-                            <label className="font-medium text-slate-700">Overall Match</label>
-                            <span className="text-indigo-600 font-bold text-lg">{formData.suitability_rating} / 5</span>
+                            <label className="font-medium text-slate-700">Overall Match <span className="text-red-500">*</span></label>
+                            <span className="text-indigo-600 font-bold text-lg">
+                                {formData.suitability_rating !== undefined ? `${formData.suitability_rating} / 5` : "-"}
+                            </span>
                         </div>
                         <div className="px-2 pb-6">
                              <Slider 
                                 min={1} max={5} step={1}
-                                value={formData.suitability_rating}
+                                value={formData.suitability_rating ?? 3}
                                 onChange={(val) => setFormData({...formData, suitability_rating: val as number})}
-                                trackStyle={{ backgroundColor: '#4f46e5', height: 6 }}
-                                handleStyle={{ borderColor: '#4f46e5', backgroundColor: '#fff', opacity: 1, boxShadow: '0 0 0 3px rgba(79, 70, 229, 0.2)' }}
+                                trackStyle={{ backgroundColor: formData.suitability_rating === undefined ? '#cbd5e1' : '#4f46e5', height: 6 }}
+                                handleStyle={{ borderColor: '#4f46e5', backgroundColor: formData.suitability_rating === undefined ? '#f1f5f9' : '#fff', opacity: 1, boxShadow: '0 0 0 3px rgba(79, 70, 229, 0.2)' }}
                                 railStyle={{ backgroundColor: '#e2e8f0', height: 6 }}
                                 marks={{ 1: 'Terrible', 2: 'Poor', 3: 'Adequate', 4: 'Good', 5: 'Great' }}
                             />
                         </div>
+                        <ErrorMsg field="suitability" errors={errors} />
                     </div>
 
-                    {/* Dynamic Range - DUAL SLIDER */}
+                    {/* 2. Strength Match */}
+                    <div className="space-y-4 pt-6 border-t border-slate-100">
+                        <div className="flex justify-between">
+                            <label className="font-medium text-slate-700">Strength Match <span className="text-red-500">*</span></label>
+                            <span className="text-slate-500 font-medium">
+                                {formData.strength_rating === undefined ? "Select..." :
+                                 formData.strength_rating === 0 ? "Perfect" : 
+                                 formData.strength_rating > 0 ? "Too Hard" : "Too Soft"}
+                            </span>
+                        </div>
+                        <div className="px-2 pb-6">
+                             <Slider 
+                                min={-5} max={5} step={1}
+                                value={formData.strength_rating ?? 0}
+                                onChange={(val) => setFormData({...formData, strength_rating: val as number})}
+                                trackStyle={{ backgroundColor: formData.strength_rating === undefined ? '#cbd5e1' : formData.strength_rating === 0 ? '#4f46e5' : '#94a3b8', height: 6 }}
+                                handleStyle={{ borderColor: '#4f46e5', backgroundColor: formData.strength_rating === undefined ? '#f1f5f9' : '#fff', opacity: 1 }}
+                                railStyle={{ backgroundColor: '#e2e8f0', height: 6 }}
+                                marks={{ '-5': 'Too Soft', 0: 'Perfect', 5: 'Too Hard' }}
+                            />
+                        </div>
+                        <ErrorMsg field="strength" errors={errors} />
+                    </div>
+
+                    {/* 3. Resistance */}
+                    <div className="space-y-4 pt-6 border-t border-slate-100">
+                        <div className="flex justify-between">
+                            <label className="font-medium text-slate-700">Resistance <span className="text-red-500">*</span></label>
+                            <span className="text-slate-500 font-medium">
+                                {formData.resistance_feel === undefined ? "Select..." :
+                                 formData.resistance_feel === 0 ? "Medium" : 
+                                 formData.resistance_feel > 0 ? "Resistant" : "Free-blowing"}
+                            </span>
+                        </div>
+                        <div className="px-2 pb-6">
+                             <Slider 
+                                min={-5} max={5} step={1}
+                                value={formData.resistance_feel ?? 0}
+                                onChange={(val) => setFormData({...formData, resistance_feel: val as number})}
+                                trackStyle={{ backgroundColor: formData.resistance_feel === undefined ? '#cbd5e1' : formData.resistance_feel === 0 ? '#4f46e5' : '#94a3b8', height: 6 }}
+                                handleStyle={{ borderColor: '#4f46e5', backgroundColor: formData.resistance_feel === undefined ? '#f1f5f9' : '#fff', opacity: 1 }}
+                                railStyle={{ backgroundColor: '#e2e8f0', height: 6 }}
+                                marks={{ '-5': 'Free-blowing', 0: 'Medium', 5: 'Resistant' }}
+                            />
+                        </div>
+                        <ErrorMsg field="resistance" errors={errors} />
+                    </div>
+
+                    {/* 4. Tone Color */}
+                    <div className="space-y-4 pt-6 border-t border-slate-100">
+                         <div className="flex justify-between">
+                            <label className="font-medium text-slate-700">Tone Color <span className="text-red-500">*</span></label>
+                            <span className="text-slate-500 font-medium">
+                                {formData.brightness_feel === undefined ? "Select..." :
+                                 formData.brightness_feel === 0 ? "Neutral" : 
+                                 formData.brightness_feel > 0 ? "Bright" : "Dark"}
+                            </span>
+                        </div>
+                        <div className="px-2 pb-6">
+                             <Slider 
+                                min={-5} max={5} step={1}
+                                value={formData.brightness_feel ?? 0}
+                                onChange={(val) => setFormData({...formData, brightness_feel: val as number})}
+                                trackStyle={{ backgroundColor: formData.brightness_feel === undefined ? '#cbd5e1' : '#4f46e5', height: 6 }}
+                                handleStyle={{ borderColor: '#4f46e5', backgroundColor: formData.brightness_feel === undefined ? '#f1f5f9' : '#fff', opacity: 1 }}
+                                railStyle={{ backgroundColor: '#e2e8f0', height: 6 }}
+                                marks={{ '-5': 'Dark', 0: 'Neutral', 5: 'Bright' }}
+                            />
+                        </div>
+                        <ErrorMsg field="brightness" errors={errors} />
+                    </div>
+
+                    {/* 5. Dynamic Range */}
                     <div className="space-y-4 pt-8 border-t border-slate-100">
-                        <label className="font-medium text-slate-700 block mb-4">Comfortable Dynamic Range</label>
+                        <label className="font-medium text-slate-700 block mb-4">Comfortable Dynamic Range <span className="text-red-500">*</span></label>
                         
                         <div className="px-2 pb-8">
                              <Slider 
@@ -567,10 +795,10 @@ export default function SurveyWizard() {
                                         if(errors.dynamics) setErrors({...errors, dynamics: ''});
                                     }
                                 }}
-                                trackStyle={[{ backgroundColor: '#4f46e5', height: 6 }]}
+                                trackStyle={[{ backgroundColor: (formData.min_dynamic === undefined || formData.max_dynamic === undefined) ? '#cbd5e1' : '#4f46e5', height: 6 }]}
                                 handleStyle={[
-                                    { borderColor: '#4f46e5', backgroundColor: '#fff', opacity: 1 },
-                                    { borderColor: '#4f46e5', backgroundColor: '#fff', opacity: 1 }
+                                    { borderColor: '#4f46e5', backgroundColor: (formData.min_dynamic === undefined) ? '#f1f5f9' : '#fff', opacity: 1 },
+                                    { borderColor: '#4f46e5', backgroundColor: (formData.max_dynamic === undefined) ? '#f1f5f9' : '#fff', opacity: 1 }
                                 ]}
                                 railStyle={{ backgroundColor: '#e2e8f0', height: 6 }}
                                 marks={{
@@ -578,81 +806,9 @@ export default function SurveyWizard() {
                                 }}
                             />
                         </div>
-                        <div className="text-center text-sm text-slate-600 bg-slate-50 py-2 rounded-lg">
-                            Range: 
-                            <span className="font-mono font-bold text-indigo-600 mx-2">
-                                {['', 'ppp','pp','p','mp','mf','f','ff','fff'][formData.min_dynamic || 1]}
-                            </span>
-                            to
-                            <span className="font-mono font-bold text-indigo-600 mx-2">
-                                {['', 'ppp','pp','p','mp','mf','f','ff','fff'][formData.max_dynamic || 8]}
-                            </span>
-                        </div>
                          <ErrorMsg field="dynamics" errors={errors} />
                     </div>
-                    
-                    {/* Resistance (New) */}
-                    <div className="space-y-4 pt-6 border-t border-slate-100">
-                        <div className="flex justify-between">
-                            <label className="font-medium text-slate-700">Resistance</label>
-                            <span className="text-slate-500 font-medium">
-                                {formData.resistance_feel === 0 ? "Medium" : formData.resistance_feel! > 0 ? "Resistant" : "Free-blowing"}
-                            </span>
-                        </div>
-                        <div className="px-2 pb-6">
-                             <Slider 
-                                min={-5} max={5} step={1}
-                                value={formData.resistance_feel}
-                                onChange={(val) => setFormData({...formData, resistance_feel: val as number})}
-                                trackStyle={{ backgroundColor: formData.resistance_feel === 0 ? '#4f46e5' : '#94a3b8', height: 6 }}
-                                handleStyle={{ borderColor: '#4f46e5', backgroundColor: '#fff', opacity: 1 }}
-                                railStyle={{ backgroundColor: '#e2e8f0', height: 6 }}
-                                marks={{ '-5': 'Free-blowing', 0: 'Medium', 5: 'Resistant' }}
-                            />
-                        </div>
-                    </div>
 
-                    {/* Strength Rating */}
-                    <div className="space-y-4 pt-6 border-t border-slate-100">
-                        <div className="flex justify-between">
-                            <label className="font-medium text-slate-700">Strength Match</label>
-                            <span className="text-slate-500 font-medium">
-                                {formData.strength_rating === 0 ? "Perfect" : formData.strength_rating! > 0 ? "Too Hard" : "Too Soft"}
-                            </span>
-                        </div>
-                        <div className="px-2 pb-6">
-                             <Slider 
-                                min={-5} max={5} step={1}
-                                value={formData.strength_rating}
-                                onChange={(val) => setFormData({...formData, strength_rating: val as number})}
-                                trackStyle={{ backgroundColor: formData.strength_rating === 0 ? '#4f46e5' : '#94a3b8', height: 6 }}
-                                handleStyle={{ borderColor: '#4f46e5', backgroundColor: '#fff', opacity: 1 }}
-                                railStyle={{ backgroundColor: '#e2e8f0', height: 6 }}
-                                marks={{ '-5': 'Too Soft', 0: 'Perfect', 5: 'Too Hard' }}
-                            />
-                        </div>
-                    </div>
-
-                    {/* Brightness */}
-                    <div className="space-y-4 pt-6 border-t border-slate-100">
-                         <div className="flex justify-between">
-                            <label className="font-medium text-slate-700">Tone Color</label>
-                            <span className="text-slate-500 font-medium">
-                                {formData.brightness_feel === 0 ? "Neutral" : formData.brightness_feel! > 0 ? "Bright" : "Dark"}
-                            </span>
-                        </div>
-                        <div className="px-2 pb-6">
-                             <Slider 
-                                min={-5} max={5} step={1}
-                                value={formData.brightness_feel}
-                                onChange={(val) => setFormData({...formData, brightness_feel: val as number})}
-                                trackStyle={{ backgroundColor: '#4f46e5', height: 6 }}
-                                handleStyle={{ borderColor: '#4f46e5', backgroundColor: '#fff', opacity: 1 }}
-                                railStyle={{ backgroundColor: '#e2e8f0', height: 6 }}
-                                marks={{ '-5': 'Dark', 0: 'Neutral', 5: 'Bright' }}
-                            />
-                        </div>
-                    </div>
                     
                     {/* Modification Details if any flag is set */}
                     {(formData.is_mouthpiece_modified || formData.is_reed_modified) && (

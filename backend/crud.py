@@ -13,3 +13,9 @@ def create_submission(db: Session, submission: schemas.PlayerSubmissionCreate):
     db.commit()
     db.refresh(db_submission)
     return db_submission
+
+def get_submissions_by_mouthpiece(db: Session, mouthpiece_id: str):
+    return db.query(models.PlayerSubmission).filter(models.PlayerSubmission.mouthpiece_id == mouthpiece_id).all()
+
+def get_active_mouthpiece_ids(db: Session):
+    return db.query(models.PlayerSubmission.mouthpiece_id).distinct().all()

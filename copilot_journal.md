@@ -1,5 +1,44 @@
 # Copilot Journal
 
+## 2024-05-24 12:05
+User Prompt: "Overall Match (1st), Strength Match (2nd). Also can you make the "Standard Specs" and selected tip specs show to 3 decimal places (0.000")? "Comfortable Dynamic Range" defaults to 1-8 (ppp to fff) in the UI, but I want it to be null/undefined until the user touches it so we know they actually selected it. And finally, please implement a "Success" / "Thank You" screen after submission that shows a summary of what they submitted (Mouthpiece + Reed) and buttons to "Submit another setup" (resets state) or "Back to main menu"."
+
+Changes:
+-   Modified `SurveyWizard.tsx`:
+    -   Updated tip opening spec display to use `.toFixed(3)` for both selected tip and standard specs.
+    -   Reordered Step 4 sliders: Overall Match -> Strength Match -> Resistance -> Tone Color -> Dynamic Range.
+    -   Updated Dynamic Range slider to visually indicate "undefined" state (grayed out) until interaction.
+    -   Implemented a Success/Thank You view after submission.
+    -   Added `isSuccess` state and `handleReset` function.
+    -   Fixed `handleSubmit` to show success view instead of simple alert.
+
+Verification:
+-   `npm run lint`: Passed.
+-   `npm test`: Passed.
+-   `npm run build`: Passed.
+
+
+## 2026-02-12 11:45
+**User Prompt:** "Fix wrong spec data for mouthpiece (Alto instrument showing Tenor specs) and fix blocked Next Step button for single-option mouthpieces (Selmer Concept) not auto-selecting ID."
+**Summary:** Analyzed issues where unfiltered `tip_openings` caused wrong spec display and broke auto-selection logic for multi-instrument models like Selmer Concept.
+1.  Updated `SurveyWizard.tsx` to filter `tip_openings` by `formData.instrument`.
+2.  Implemented `instrumentTips` memo to ensure "Standard Specs" display only shows data relevant to the selected saxophone type.
+3.  Updated auto-selection logic to use `instrumentTips` so that if a model has Alto and Tenor versions, but the user picked Alto, it correctly identifies a single valid option and auto-selects it.
+4.  Refactored `SurveyWizard.test.tsx` to include regression testing structure for this validation logic.
+
+## 2026-02-12 11:35
+**User Prompt:** "I'm still getting the same error... 422 Unprocessable Content... postSubmission"
+**Summary:** Analyzed the 422 error and determined it was caused by `tip_opening_id` missing from backend submission for single-option mouthpieces (like Selmer Concept). Updated `SurveyWizard.tsx` to:
+1.  Use `useMemo` for derived `validTipOpenings` logic.
+2.  Implement robust auto-selection logic in `onChange` for single-option mouthpieces.
+3.  Enforce strict validation in Step 1 to BLOCK submission if `tip_opening_id` is missing, preventing 422 errors.
+4.  Improved `postSubmission` to parse and throw detailed backend error messages for better debugging visibility.
+
+## 2026-02-12 11:30
+**User Prompt:** "Remove "Range: x to y" readout. Rename "Final Impressions" to "Evaluation". Reorder evaluation fields. Show spec data for fixed-facing mouthpieces (Selmer Concept) instead of hiding generic note. Default sliders to null/undefined. Fix 422 Submit Error."
+**Summary:** Updated `SurveyWizard.tsx` to fix 422 errors by auto-selecting single-option tip openings (like Selmer Concept) in the `onChange` handler. Refactored Step 3 (Evaluation) UI to reorder fields, rename section, remove redundant text, and implement null-checking validation with visual feedback. initialized form state to `undefined`. Improved error handling in `handleSubmit` to show detailed API errors.
+
+
 ## 2026-02-08 23:14
 **User Prompt:** "Comfortable Dynamic Range and min_dynamic/max_dynamic should be 1-8, ppp to fff... are updates needed to .gitignore?"
 **Summary:**

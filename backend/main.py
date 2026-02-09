@@ -50,3 +50,12 @@ def read_reeds(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
 @app.post("/api/v1/survey/submit", response_model=schemas.PlayerSubmissionOut, status_code=status.HTTP_201_CREATED)
 def create_submission(submission: schemas.PlayerSubmissionCreate, db: Session = Depends(get_db)):
     return crud.create_submission(db=db, submission=submission)
+
+@app.get("/api/v1/submissions/mouthpiece/{mouthpiece_id}", response_model=List[schemas.PlayerSubmissionOut])
+def read_submissions_by_mouthpiece(mouthpiece_id: str, db: Session = Depends(get_db)):
+    return crud.get_submissions_by_mouthpiece(db, mouthpiece_id=mouthpiece_id)
+
+@app.get("/api/v1/stats/active_mouthpieces")
+def get_active_mouthpieces(db: Session = Depends(get_db)):
+    ids = crud.get_active_mouthpiece_ids(db)
+    return [str(i[0]) for i in ids]

@@ -19,32 +19,12 @@ export default function LandingPage() {
           >
             Contribute Your Data
           </Link>
-          <button 
-            disabled
-            className="inline-flex items-center justify-center px-8 py-4 text-lg font-bold text-slate-700 transition-all bg-slate-100 border border-slate-300 rounded-lg hover:bg-slate-200 focus:outline-none cursor-not-allowed opacity-60"
+          <Link 
+            to="/recommend" 
+            className="inline-flex items-center justify-center px-8 py-4 text-lg font-bold text-slate-700 transition-all bg-white border border-slate-300 rounded-lg hover:bg-slate-50 shadow-sm hover:shadow-md focus:outline-none"
           >
-            I'm Feeling Lucky
-          </button>
-        </div>
-
-        <div className="pt-8 border-t border-slate-200">
-          <p className="text-sm text-slate-500 font-semibold uppercase tracking-wider mb-4">
-            Recent Community Matches
-          </p>
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 text-left text-sm">
-            <div className="bg-slate-50 p-3 rounded border border-slate-200">
-              <span className="block font-bold text-indigo-600">Jazz Alto</span>
-              <span className="text-slate-600">Meyer 5M + Vandoren Java 2.5</span>
-            </div>
-            <div className="bg-slate-50 p-3 rounded border border-slate-200">
-              <span className="block font-bold text-indigo-600">Classical Tenor</span>
-              <span className="text-slate-600">Selmer C* + Blue Box 3.0</span>
-            </div>
-            <div className="bg-slate-50 p-3 rounded border border-slate-200">
-              <span className="block font-bold text-indigo-600">Rock Bari</span>
-              <span className="text-slate-600">Berg Larsen + Rico Plasticover</span>
-            </div>
-          </div>
+            Find a reed for my mouthpiece
+          </Link>
         </div>
       </div>
     </div>
