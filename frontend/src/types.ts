@@ -84,3 +84,8 @@ export interface PlayerSubmission {
     modification_details?: string;
     comments?: string;
 }
+
+export interface PlayerSubmissionResponse extends PlayerSubmission {
+    id: string;
+    timestamp: string;
+}

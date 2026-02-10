@@ -2,7 +2,7 @@ Here is a rough ordering of the project's backlog
 
 - [X] Set up DB, with a small list of options for mouthpiece and reed
 - [X] MVP UI to enter survey data
-- [ ] MVP recommender UI
+- [X] MVP reed recommender
 - [ ] MVP basic data viewing
 - [ ] Expand mouthpiece/reed options
 - [ ] Improve UX of survey page

@@ -2,18 +2,9 @@ import { useState, useEffect, useMemo } from 'react';
 import { Link } from 'react-router-dom';
 import { ChevronLeft, Loader2 } from 'lucide-react';
 import { InstrumentType } from '../types';
-import type { Mouthpiece, Reed, PlayerSubmission } from '../types';
+import type { Mouthpiece, Reed, PlayerSubmissionResponse } from '../types';
 
 const API_BASE = 'http://localhost:8000/api/v1';
-
-// We need a type for the submissions we fetch
-interface Submission extends PlayerSubmission {
-    id: string;
-    mouthpiece_id: string;
-    instrument: InstrumentType;
-    reed_id: string;
-    suitability_rating: number;
-}
 
 export default function ReedFinder() {
     const [isLoading, setIsLoading] = useState(true);
@@ -28,7 +19,7 @@ export default function ReedFinder() {
     const [selectedTipId, setSelectedTipId] = useState('');
     
     // Results
-    const [submissions, setSubmissions] = useState<Submission[]>([]);
+    const [submissions, setSubmissions] = useState<PlayerSubmissionResponse[]>([]);
     const [isLoadingResults, setIsLoadingResults] = useState(false);
 
     useEffect(() => {
@@ -44,7 +35,19 @@ export default function ReedFinder() {
         }).catch(err => console.error(err));
     }, []);
 
-    // 1. Filter Mouthpieces by Instrument & Active Data
+    // 1. Valid Instruments (only show instruments with data)
+    const validInstruments = useMemo(() => {
+        const instruments = new Set<string>();
+        mouthpieces.forEach(m => {
+            if (activeMpcIds.has(m.id)) {
+                m.tip_openings.forEach(t => { if (t.instrument) instruments.add(t.instrument); });
+            }
+        });
+        // Filter out any that are not keys of InstrumentType if necessary, but data should be clean
+        return Array.from(instruments).sort() as InstrumentType[];
+    }, [mouthpieces, activeMpcIds]);
+
+    // 2. Filter Mouthpieces by Instrument & Active Data
     const availableMouthpieces = useMemo(() => {
         if (!selectedInstrument) return [];
         return mouthpieces.filter(m => 
@@ -53,12 +56,12 @@ export default function ReedFinder() {
         );
     }, [mouthpieces, selectedInstrument, activeMpcIds]);
 
-    // 2. Unique Manufacturers
+    // 3. Unique Manufacturers
     const uniqueMfgs = useMemo(() => {
         return Array.from(new Set(availableMouthpieces.map(m => m.manufacturer))).sort();
     }, [availableMouthpieces]);
 
-    // 3. Unique Models for selected Mfg
+    // 4. Unique Models for selected Mfg
     const uniqueModels = useMemo(() => {
         if (!selectedMfg) return [];
         return availableMouthpieces
@@ -68,7 +71,7 @@ export default function ReedFinder() {
             .sort();
     }, [availableMouthpieces, selectedMfg]);
 
-    // 4. Get Actual Mouthpiece Object & Tips
+    // 5. Get Actual Mouthpiece Object & Tips
     const activeMouthpiece = useMemo(() => {
         if (!selectedMfg || !selectedModel) return null;
         return availableMouthpieces.find(m => 
@@ -82,6 +85,28 @@ export default function ReedFinder() {
         return activeMouthpiece.tip_openings.filter(t => t.instrument === selectedInstrument);
     }, [activeMouthpiece, selectedInstrument]);
     
+    // Auto-Select Logic
+    useEffect(() => {
+        if (!selectedInstrument && validInstruments.length === 1) {
+             // eslint-disable-next-line react-hooks/set-state-in-effect
+             setSelectedInstrument(validInstruments[0]);
+        }
+    }, [validInstruments, selectedInstrument]);
+
+    useEffect(() => {
+        if (selectedInstrument && !selectedMfg && uniqueMfgs.length === 1) {
+            // eslint-disable-next-line react-hooks/set-state-in-effect
+            setSelectedMfg(uniqueMfgs[0]);
+        }
+    }, [selectedInstrument, uniqueMfgs, selectedMfg]);
+
+     useEffect(() => {
+        if (selectedInstrument && selectedMfg && !selectedModel && uniqueModels.length === 1) {
+            // eslint-disable-next-line react-hooks/set-state-in-effect
+            setSelectedModel(uniqueModels[0]);
+        }
+    }, [selectedMfg, uniqueModels, selectedModel, selectedInstrument]);
+    
     // Fetch Submissions when selection is complete
     useEffect(() => {
         if (activeMouthpiece && selectedTipId) {
@@ -89,7 +114,7 @@ export default function ReedFinder() {
             setIsLoadingResults(true);
             fetch(`${API_BASE}/submissions/mouthpiece/${activeMouthpiece.id}`)
                 .then(r => r.json())
-                .then((data: Submission[]) => {
+                .then((data: PlayerSubmissionResponse[]) => {
                     // Filter locally by Instrument and Tip (since endpoint is generic)
                     // The prompt implies we select specific tip.
                     let filtered = data.filter(s => s.instrument === selectedInstrument);
@@ -109,46 +134,49 @@ export default function ReedFinder() {
     }, [activeMouthpiece, selectedTipId, selectedInstrument]);
 
 
-    // Process Data for Table
-    // Rows: Reed Mfg + Model
-    // Cols: Ratings 1-5
-    // Cell: List of strengths
-    const tableData = useMemo(() => {
+    // Process Data for Visualization
+    const visualizationData = useMemo(() => {
         if (submissions.length === 0) return [];
-
-        const rows = new Map<string, { mfg: string, model: string, ratings: Record<number, Set<string>> }>();
+    
+        // 1. Group by Reed Mfg + Model
+        const groups = new Map<string, { mfg: string, model: string, strengthStats: Map<string, number[]> }>();
 
         submissions.forEach(sub => {
             const reed = reeds.find(r => r.id === sub.reed_id);
             if (!reed) return;
             const key = `${reed.manufacturer}-${reed.model}`;
             
-            if (!rows.has(key)) {
-                rows.set(key, { 
+            if (!groups.has(key)) {
+                groups.set(key, { 
                     mfg: reed.manufacturer, 
                     model: reed.model, 
-                    ratings: { 1: new Set(), 2: new Set(), 3: new Set(), 4: new Set(), 5: new Set() } 
+                    strengthStats: new Map() // Strength Label -> Array of ratings
                 });
             }
             
-            const row = rows.get(key)!;
-            // Map suitability rating to integer if needed (assuming 1-5 from context)
-            const rating = sub.suitability_rating || 0;
-            if (rating >= 1 && rating <= 5) {
-                row.ratings[rating].add(reed.strength_label);
+            const group = groups.get(key)!;
+            if (!group.strengthStats.has(reed.strength_label)) {
+                group.strengthStats.set(reed.strength_label, []);
+            }
+            if (sub.suitability_rating) {
+                group.strengthStats.get(reed.strength_label)?.push(sub.suitability_rating);
             }
         });
 
-        return Array.from(rows.values()).sort((a,b) => a.mfg.localeCompare(b.mfg));
-    }, [submissions, reeds]);
+        // 2. Flatten to array for rendering
+        return Array.from(groups.values()).map(g => {
+            const plots = Array.from(g.strengthStats.entries()).map(([strength, ratings]) => {
+                const avg = ratings.reduce((a, b) => a + b, 0) / ratings.length;
+                return { strength, avg, count: ratings.length };
+            });
+            return {
+                mfg: g.mfg,
+                model: g.model,
+                plots: plots.sort((a, b) => parseFloat(a.strength) - parseFloat(b.strength))
+            };
+        }).sort((a,b) => a.mfg.localeCompare(b.mfg));
 
-    const RATINGS = [
-        { val: 1, label: "Terrible" },
-        { val: 2, label: "Poor" },
-        { val: 3, label: "Adequate" },
-        { val: 4, label: "Good" },
-        { val: 5, label: "Great" }
-    ];
+    }, [submissions, reeds]);
 
     if (isLoading) return <div className="flex h-screen items-center justify-center text-slate-500">Loading recommender...</div>;
 
@@ -176,7 +204,7 @@ export default function ReedFinder() {
                             }}
                         >
                             <option value="">Select...</option>
-                            {Object.values(InstrumentType).map(i => <option key={i} value={i}>{i}</option>)}
+                            {validInstruments.map(i => <option key={i} value={i}>{i}</option>)}
                         </select>
                     </label>
 
@@ -222,9 +250,15 @@ export default function ReedFinder() {
                         >
                             <option value="">Select...</option>
                              {/* Allow "Any" if needed, but prompt implies granular selection. We'll show specific tips. */}
-                            {availableTips.map(t => (
-                                <option key={t.id} value={t.id}>{t.label || `${t.opening_inch}"`}</option>
-                            ))}
+                            {availableTips.map(t => {
+                                const inch = t.opening_inch.toFixed(3);
+                                const mm = (t.opening_inch * 25.4).toFixed(2);
+                                return (
+                                    <option key={t.id} value={t.id}>
+                                        {t.label ? `${t.label}, ` : ''}{inch}" / {mm} mm
+                                    </option>
+                                );
+                            })}
                         </select>
                     </label>
                 </div>
@@ -236,49 +270,104 @@ export default function ReedFinder() {
                     </div>
                 )}
 
-                {/* Table */}
-                {!isLoadingResults && selectedTipId && tableData.length > 0 && (
-                     <div className="bg-white rounded-xl shadow-lg border border-slate-100 overflow-hidden animate-in fade-in slide-in-from-bottom-4">
-                        <div className="overflow-x-auto">
-                            <table className="min-w-full divide-y divide-slate-200">
-                                <thead className="bg-slate-50">
-                                    <tr>
-                                        <th className="px-6 py-4 text-left text-xs font-bold text-slate-500 uppercase tracking-wider">Reed</th>
-                                        {RATINGS.map(r => (
-                                            <th key={r.val} className="px-6 py-4 text-left text-xs font-bold text-slate-500 uppercase tracking-wider">
-                                                {r.label}
-                                            </th>
-                                        ))}
-                                    </tr>
-                                </thead>
-                                <tbody className="bg-white divide-y divide-slate-200">
-                                    {tableData.map(row => (
-                                        <tr key={`${row.mfg}-${row.model}`} className="hover:bg-slate-50 transition-colors">
-                                            <td className="px-6 py-4 whitespace-nowrap">
-                                                <div className="text-sm font-bold text-slate-900">{row.mfg}</div>
-                                                <div className="text-sm text-slate-500">{row.model}</div>
-                                            </td>
-                                            {RATINGS.map(r => {
-                                                const strengths = Array.from(row.ratings[r.val]).sort();
+                {/* Results List */}
+                {!isLoadingResults && selectedTipId && visualizationData.length > 0 && (
+                     <div className="animate-in fade-in slide-in-from-bottom-4">
+                        {/* Overall Header / Axis (Desktop Only) */}
+                        <div className="hidden md:block bg-white rounded-t-xl shadow-sm border border-slate-200 border-b-0 p-6 pb-2">
+                             <div className="flex items-center gap-6">
+                                <div className="w-1/4 min-w-[200px] text-sm font-semibold text-slate-500 uppercase tracking-wider">Reed Model</div>
+                                <div className="flex-1 text-center relative h-8 mx-8">
+                                    <div className="absolute inset-0 flex items-center">
+                                         {["Terrible", "Poor", "Adequate", "Good", "Great"].map((label, i) => (
+                                             <div 
+                                                key={label} 
+                                                className="absolute text-xs font-bold text-slate-400 uppercase tracking-wider -translate-x-1/2"
+                                                style={{ left: `${i * 25}%` }}
+                                             >
+                                                {label}
+                                             </div>
+                                         ))}
+                                    </div>
+                                </div>
+                             </div>
+                        </div>
+
+                        {/* Combined Container for Rows */}
+                        <div className="bg-white rounded-b-xl shadow-sm border border-slate-200 divide-y divide-slate-100">
+                            {visualizationData.map((row) => (
+                                <div key={`${row.mfg}-${row.model}`} className="p-6 flex flex-col md:flex-row items-center gap-6 hover:bg-slate-50 transition-colors">
+                                    {/* Reed Info */}
+                                    <div className="w-full md:w-1/4 min-w-[200px] text-center md:text-left self-start md:self-center">
+                                        <h3 className="text-lg font-bold text-slate-900">{row.mfg}</h3>
+                                        <p className="text-slate-600">{row.model}</p>
+                                    </div>
+                                    
+                                    {/* Visualization Track (Desktop) */}
+                                    <div className="hidden md:block flex-1 w-full relative h-12 bg-slate-50/50 rounded-lg border border-slate-100 mx-8">
+                                        {/* Grid Lines */}
+                                        <div className="absolute inset-0">
+                                            {[0, 25, 50, 75, 100].map(pct => (
+                                                <div 
+                                                    key={pct} 
+                                                    className="absolute top-0 bottom-0 border-r border-slate-300 w-px"
+                                                    style={{ left: `${pct}%` }}
+                                                />
+                                            ))}
+                                        </div>
+                                        
+                                        {/* Plotted Points */}
+                                        <div className="absolute inset-0 top-1/2 -translate-y-1/2 h-8"> 
+                                            {row.plots.map((stat, idx) => {
+                                                const pct = ((stat.avg - 1) / 4) * 100;
                                                 return (
-                                                    <td key={r.val} className="px-6 py-4 whitespace-nowrap text-sm text-slate-700">
-                                                        {strengths.length > 0 ? (
-                                                            <span className="inline-flex items-center px-2.5 py-0.5 rounded-full font-medium bg-indigo-50 text-indigo-700">
-                                                                {strengths.join(", ")}
-                                                            </span>
-                                                        ) : <span className="text-slate-300">-</span>}
-                                                    </td>
+                                                    <div 
+                                                        key={idx}
+                                                        className="absolute top-1/2 -translate-y-1/2 flex items-center justify-center w-8 h-8 rounded-full bg-indigo-600 text-white font-bold text-sm shadow-md cursor-help transition-transform hover:scale-110 hover:z-10 group"
+                                                        style={{ left: `${pct}%`, transform: 'translate(-50%, -50%)' }}
+                                                        title={`Avg Rating: ${stat.avg.toFixed(1)} (${stat.count} ratings)`}
+                                                    >
+                                                        {stat.strength}
+                                                        {/* Tooltip */}
+                                                        <span className="absolute bottom-full mb-2 bg-slate-900 text-white text-xs py-1 px-2 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap pointer-events-none z-20 left-1/2 -translate-x-1/2">
+                                                            {stat.avg.toFixed(2)} / 5
+                                                        </span>
+                                                    </div>
                                                 );
                                             })}
-                                        </tr>
-                                    ))}
-                                </tbody>
-                            </table>
+                                        </div>
+                                    </div>
+
+                                    {/* Mobile Vertical List */}
+                                    <div className="md:hidden w-full space-y-3 mt-2">
+                                        {row.plots.map((stat, idx) => {
+                                             const pct = ((stat.avg - 1) / 4) * 100;
+                                             return (
+                                                 <div key={idx} className="flex flex-col bg-slate-50 border border-slate-100 rounded-lg p-3">
+                                                    <div className="flex justify-between items-center mb-2">
+                                                        <div className="flex items-center gap-2">
+                                                            <span className="font-bold text-slate-800 bg-white border border-slate-200 px-2 py-0.5 rounded text-sm">{stat.strength}</span>
+                                                            <span className="text-sm text-slate-500 font-medium">
+                                                                {stat.avg >= 4.5 ? "Great" : stat.avg >= 3.5 ? "Good" : stat.avg >= 2.5 ? "Adequate" : stat.avg >= 1.5 ? "Poor" : "Terrible"}
+                                                            </span>
+                                                        </div>
+                                                        <span className="text-sm font-bold text-indigo-600">{stat.avg.toFixed(1)} / 5</span>
+                                                    </div>
+                                                    <div className="h-2 w-full bg-slate-200 rounded-full overflow-hidden">
+                                                        <div className="h-full bg-indigo-600" style={{ width: `${pct}%` }} />
+                                                    </div>
+                                                 </div>
+                                             );
+                                        })}
+                                    </div>
+
+                                </div>
+                            ))}
                         </div>
                      </div>
                 )}
                 
-                {!isLoadingResults && selectedTipId && tableData.length === 0 && (
+                {!isLoadingResults && selectedTipId && visualizationData.length === 0 && (
                     <div className="text-center py-12 bg-white rounded-xl shadow-sm border border-slate-100">
                         <p className="text-slate-500">No data found for this specific setup yet. Be the first to add one!</p>
                         <Link to="/wizard" className="inline-block mt-4 text-indigo-600 font-semibold hover:underline">

@@ -21,9 +21,9 @@ export default function LandingPage() {
           </Link>
           <Link 
             to="/recommend" 
-            className="inline-flex items-center justify-center px-8 py-4 text-lg font-bold text-slate-700 transition-all bg-white border border-slate-300 rounded-lg hover:bg-slate-50 shadow-sm hover:shadow-md focus:outline-none"
+            className="inline-flex items-center justify-center px-8 py-4 text-lg font-bold text-white transition-all bg-indigo-600 rounded-lg hover:bg-indigo-700 hover:shadow-lg transform hover:-translate-y-0.5 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
           >
-            Find a reed for my mouthpiece
+            Setup Recommender
           </Link>
         </div>
       </div>

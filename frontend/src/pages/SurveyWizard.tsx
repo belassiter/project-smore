@@ -10,7 +10,7 @@ import {
   InstrumentType, Genre, SkillLevel, PlayerHours 
 } from '../types';
 import type { 
-  Mouthpiece, Reed, PlayerSubmission 
+  Mouthpiece, Reed, PlayerSubmission, PlayerSubmissionResponse 
 } from '../types';
 
 function cn(...inputs: (string | undefined | null | false)[]) {
@@ -65,6 +65,7 @@ export default function SurveyWizard() {
   const [isSuccess, setIsSuccess] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [errors, setErrors] = useState<Record<string, string>>({});
+  const [recommendation, setRecommendation] = useState<{name: string, rating: number} | null>(null);
   
   // Data Options
   const [mouthpieces, setMouthpieces] = useState<Mouthpiece[]>([]);
@@ -115,15 +116,18 @@ export default function SurveyWizard() {
   };
   const activeMouthpiece = getMouthpieceObj(selectedMpcMfg, selectedMpcModel);
   
-  // Filter tip openings by selected instrument to avoid cross-instrument specs
+  // Filter tip openings by selected instrument
   const instrumentTips = useMemo(() => {
     if (!activeMouthpiece || !formData.instrument) return [];
     return activeMouthpiece.tip_openings.filter(t => t.instrument === formData.instrument);
   }, [activeMouthpiece, formData.instrument]);
 
-  // Filter out potential empty/invalid tip openings to prevent UI ghosts
+  // Ensure all tips are valid for UI, providing fallback label if missing
   const validTipOpenings = useMemo(() => {
-    return instrumentTips.filter(t => t.id && t.label && t.label.trim() !== "");
+    return instrumentTips.map(t => ({
+        ...t,
+        label: (t.label && t.label.trim() !== "") ? t.label : "Standard"
+    }));
   }, [instrumentTips]);
   
   // Find selected tip in ALL openings for this mouthpiece (in case ID is already set)
@@ -132,17 +136,13 @@ export default function SurveyWizard() {
   // Auto-select tip opening if logic dictates (ONLY from instrument-compatible tips)
   useEffect(() => {
     if (activeMouthpiece && !formData.tip_opening_id && formData.instrument) {
-        // Case A: Only one valid visible option for this instrument
+        // Case A: Only one option available (whether it had a label or we gave it one)
         if (validTipOpenings.length === 1) {
-             // eslint-disable-next-line
+             // eslint-disable-next-line react-hooks/set-state-in-effect
              setFormData(prev => ({ ...prev, tip_opening_id: validTipOpenings[0].id }));
         } 
-        // Case B: No "valid" label options, but exactly one raw option for this instrument (e.g. fixed facing)
-        else if (validTipOpenings.length === 0 && instrumentTips.length === 1) {
-             setFormData(prev => ({ ...prev, tip_opening_id: instrumentTips[0].id }));
-        }
     }
-  }, [activeMouthpiece, validTipOpenings, instrumentTips, formData.tip_opening_id, formData.instrument]);
+  }, [activeMouthpiece, validTipOpenings, formData.tip_opening_id, formData.instrument]);
 
   const uniqueReedMfgs = Array.from(new Set(reeds.map(r => r.manufacturer))).sort();
   const [selectedReedMfg, setSelectedReedMfg] = useState<string>('');
@@ -191,6 +191,8 @@ export default function SurveyWizard() {
                  newErrors.tipOpening = `This model is not available for ${formData.instrument}.`;
              } else if (!formData.tip_opening_id) {
                  newErrors.tipOpening = "Tip opening is required for this model.";
+             } else if (!compatibleTips.find(t => t.id === formData.tip_opening_id)) {
+                 newErrors.tipOpening = "Selected tip opening does not match the chosen instrument.";
              }
         }
     }
@@ -246,6 +248,48 @@ export default function SurveyWizard() {
     
     try {
       await postSubmission(formData as PlayerSubmission);
+      
+      // Calculate Recommendation for Success Screen
+      if (activeMouthpiece && formData.instrument) {
+          fetch(`${API_BASE}/submissions/mouthpiece/${activeMouthpiece.id}`)
+              .then(res => res.json())
+              .then((subs: PlayerSubmissionResponse[]) => {
+                    const relevant = subs.filter(s => s.instrument === formData.instrument);
+                    const scores = new Map<string, { total: number, count: number }>();
+                    
+                    relevant.forEach(s => {
+                        if (s.suitability_rating) {
+                            const current = scores.get(s.reed_id) || { total: 0, count: 0 };
+                            current.total += s.suitability_rating;
+                            current.count += 1;
+                            scores.set(s.reed_id, current);
+                        }
+                    });
+                    
+                    let bestId: string | null = null;
+                    let maxScore = -1;
+                    
+                    scores.forEach((val, key) => {
+                        const avg = val.total / val.count;
+                        if (avg > maxScore && val.count >= 1) { // simple threshold
+                            maxScore = avg;
+                            bestId = key;
+                        }
+                    });
+
+                    if (bestId) {
+                        const r = reeds.find(x => x.id === bestId);
+                        if (r) {
+                            setRecommendation({
+                                name: `${r.manufacturer} ${r.model} ${r.strength_label}`,
+                                rating: maxScore
+                            });
+                        }
+                    }
+              })
+              .catch(err => console.error("Rec fetch failed", err));
+      }
+
       setIsSuccess(true);
       window.scrollTo(0, 0);
     } catch (err) {
@@ -293,13 +337,26 @@ export default function SurveyWizard() {
                 </div>
                 <h2 className="text-3xl font-bold text-slate-900 mb-4">Thank you for contributing!</h2>
                 <div className="text-left bg-slate-50 rounded-lg p-6 mb-8 border border-slate-100">
-                    <p className="text-sm text-slate-500 uppercase tracking-wide font-semibold mb-2">You submitted</p>
+                    <p className="text-sm text-slate-500 uppercase tracking-wide font-semibold mb-1">Instrument</p>
+                    <p className="text-lg text-slate-800 font-medium mb-4">{formData.instrument}</p>
+
+                    <p className="text-sm text-slate-500 uppercase tracking-wide font-semibold mb-1">Your Setup</p>
                     <p className="text-lg text-slate-800 font-medium mb-1">
-                        {activeMouthpiece?.manufacturer} {activeMouthpiece?.model} {selectedTip?.label ? `- ${selectedTip.label}` : ''}
+                        {activeMouthpiece?.manufacturer} {activeMouthpiece?.model} {activeMouthpiece?.variant ? activeMouthpiece.variant : ''} {selectedTip?.label ? `- ${selectedTip.label}` : ''}
                     </p>
                     <p className="text-lg text-slate-800 font-medium">
                         {selectedReedMfg} {selectedReedModel} {formData.reed_id ? reeds.find(r => r.id === formData.reed_id)?.strength_label : ''}
                     </p>
+
+                    {recommendation && (
+                        <div className="mt-6 pt-6 border-t border-slate-200 animate-in fade-in slide-in-from-bottom-2">
+                             <p className="text-sm text-indigo-600 uppercase tracking-wide font-bold mb-2">Top Recommendation</p>
+                             <p className="text-slate-700">
+                                 Players on this setup love the <span className="font-bold text-slate-900">{recommendation.name}</span>
+                                 <span className="block text-sm text-slate-500 mt-1">Average Match: {recommendation.rating.toFixed(1)} / 5.0</span>
+                             </p>
+                        </div>
+                    )}
                 </div>
                 <div className="flex flex-col space-y-3 sm:flex-row sm:space-y-0 sm:space-x-4 justify-center">
                     <button 
@@ -508,10 +565,8 @@ export default function SurveyWizard() {
                                     let autoTipId: string | undefined = undefined;
                                     if (mpc && formData.instrument) {
                                         const instTips = mpc.tip_openings.filter(t => t.instrument === formData.instrument);
-                                        const validTips = instTips.filter(t => t.id && t.label && t.label.trim() !== "");
-                                        if (validTips.length === 1) {
-                                            autoTipId = validTips[0].id;
-                                        } else if (validTips.length === 0 && instTips.length === 1) {
+                                        // Since we treat all as valid now with fallback labels:
+                                        if (instTips.length === 1) {
                                             autoTipId = instTips[0].id;
                                         }
                                     }
@@ -526,7 +581,7 @@ export default function SurveyWizard() {
                             <ErrorMsg field="mpcModel" errors={errors} />
                         </label>
 
-                        {/* Only show Tip Opening if the selected mouthpiece HAS tip openings defined */}
+                        {/* Tip Opening Selection */}
                         {activeMouthpiece && validTipOpenings.length > 0 && (
                             <label className="block animate-in fade-in zoom-in-95 duration-200">
                                 <span className={cn("text-slate-700 font-medium", !formData.mouthpiece_id && "text-slate-400")}>Tip Opening <span className="text-red-500">*</span></span>
@@ -549,32 +604,21 @@ export default function SurveyWizard() {
                                 </select>
                                 <ErrorMsg field="tipOpening" errors={errors} />
                                 
-                                {selectedTip && (
-                                    <div className="mt-3 flex items-center p-3 bg-indigo-50 border border-indigo-100 rounded-lg text-sm text-indigo-700">
-                                        <span className="font-semibold mr-2">Specs:</span>
-                                        {selectedTip.opening_inch.toFixed(3)}" ({ (selectedTip.opening_inch * 25.4).toFixed(2) } mm)
-                                        {selectedTip.facing_length && <span className="mx-2">•</span>}
-                                        {selectedTip.facing_length && <span>Facing: {selectedTip.facing_length}</span>}
-                                    </div>
-                                )}
+                                {(() => {
+                                    const displayTip = selectedTip || validTipOpenings.find(t => t.id === formData.tip_opening_id);
+                                    if (!displayTip) return null;
+                                    return (
+                                        <div className="mt-3 flex items-center p-3 bg-indigo-50 border border-indigo-100 rounded-lg text-sm text-indigo-700">
+                                            <span className="font-semibold mr-2">Specs:</span>
+                                            {displayTip.opening_inch.toFixed(3)}" ({ (displayTip.opening_inch * 25.4).toFixed(2) } mm)
+                                            {displayTip.facing_length && <span className="mx-2">•</span>}
+                                            {displayTip.facing_length && <span>Facing: {displayTip.facing_length}</span>}
+                                        </div>
+                                    );
+                                })()}
                             </label>
                         )}
-                        {/* Fallback for models like Selmer Concept which might have 0 tip openings in DB but are valid */}
-                        {activeMouthpiece && validTipOpenings.length === 0 && (
-                             <div className="mt-2 text-sm text-slate-500 italic">
-                                {instrumentTips.length > 0 ? (
-                                    <div className="mt-3 flex items-center p-3 bg-indigo-50 border border-indigo-100 rounded-lg text-sm text-indigo-700">
-                                        <span className="font-semibold mr-2">Standard Specs:</span>
-                                        {instrumentTips[0].opening_inch.toFixed(3)}" ({ (instrumentTips[0].opening_inch * 25.4).toFixed(2) } mm)
-                                        {instrumentTips[0].facing_length && <span className="mx-2">•</span>}
-                                        {instrumentTips[0].facing_length && <span>Facing: {instrumentTips[0].facing_length}</span>}
-                                    </div>
-                                ) : (
-                                    "Note: This model has a standard facing. No tip selection needed."
-                                )}
-                             </div>
-                        )}
-
+                        
                         <div className="pt-4 border-t border-slate-100 mt-6">
                              <label className="flex items-center space-x-3 cursor-pointer group">
                                 <input 
