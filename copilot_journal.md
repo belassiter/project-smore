@@ -1,5 +1,15 @@
 # Copilot Journal
 
+## 2026-02-10 17:35
+User Prompt: "Add dropdown to Reed Recommender to view different metric types (Overall, Strength, Resistance, Tone, Dynamics), updating visualization and labels accordingly."
+Changes:
+- **State Logic**: Added `selectedMetric` state to `ReedFinder.tsx` and defined `METRICS` configuration constant.
+- **Data Processing**: Updated `visualizationData` to aggregate the selected metric dynamically.
+- **UI Update**: Added "View Metric" dropdown to the filter grid (updated to 5 columns).
+- **Visualization**: Refactored Desktop and Mobile plotting logic to handle variable Min/Max scales (-5 to 5, 1-8).
+- **Labels**: Implemented dynamic axis labels for Desktop and dynamic value descriptions for Mobile based on the selected metric.
+- Verified via Lint, Test, and Build.
+
 ## 2026-02-09 16:55
 User Prompt: "Verify missing data in Recommender, fix data mismatch issue, ensure mismatch prevention in code, and harmonize labels ('Adequate' vs 'Fair')."
 Changes:

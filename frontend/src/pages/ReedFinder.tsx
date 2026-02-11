@@ -6,6 +6,16 @@ import type { Mouthpiece, Reed, PlayerSubmissionResponse } from '../types';
 
 const API_BASE = 'http://localhost:8000/api/v1';
 
+const METRICS = {
+    suitability_rating: { label: "Overall Match", min: 1, max: 5, axisLabels: ["Terrible", "Poor", "Adequate", "Good", "Great"] },
+    strength_rating: { label: "Strength Match", min: -5, max: 5, axisLabels: ["Too Soft", "Perfect", "Too Hard"] },
+    resistance_feel: { label: "Resistance", min: -5, max: 5, axisLabels: ["Free-blowing", "Medium", "Resistant"] },
+    brightness_feel: { label: "Tone Color", min: -5, max: 5, axisLabels: ["Dark", "Neutral", "Bright"] },
+    min_dynamic: { label: "Dynamic Range: Min", min: 1, max: 8, axisLabels: ["ppp", "mp", "fff"] },
+    max_dynamic: { label: "Dynamic Range: Max", min: 1, max: 8, axisLabels: ["ppp", "mp", "fff"] },
+} as const;
+type MetricKey = keyof typeof METRICS;
+
 export default function ReedFinder() {
     const [isLoading, setIsLoading] = useState(true);
     const [mouthpieces, setMouthpieces] = useState<Mouthpiece[]>([]);
@@ -17,6 +27,7 @@ export default function ReedFinder() {
     const [selectedMfg, setSelectedMfg] = useState('');
     const [selectedModel, setSelectedModel] = useState('');
     const [selectedTipId, setSelectedTipId] = useState('');
+    const [selectedMetric, setSelectedMetric] = useState<MetricKey>('suitability_rating');
     
     // Results
     const [submissions, setSubmissions] = useState<PlayerSubmissionResponse[]>([]);
@@ -158,17 +169,21 @@ export default function ReedFinder() {
             if (!group.strengthStats.has(reed.strength_label)) {
                 group.strengthStats.set(reed.strength_label, []);
             }
-            if (sub.suitability_rating) {
-                group.strengthStats.get(reed.strength_label)?.push(sub.suitability_rating);
+            
+            const val = sub[selectedMetric];
+            if (val !== undefined && val !== null) {
+                group.strengthStats.get(reed.strength_label)?.push(val);
             }
         });
 
         // 2. Flatten to array for rendering
         return Array.from(groups.values()).map(g => {
             const plots = Array.from(g.strengthStats.entries()).map(([strength, ratings]) => {
+                if(ratings.length === 0) return { strength, avg: 0, count: 0 };
                 const avg = ratings.reduce((a, b) => a + b, 0) / ratings.length;
                 return { strength, avg, count: ratings.length };
-            });
+            }).filter(p => p.count > 0);
+            
             return {
                 mfg: g.mfg,
                 model: g.model,
@@ -176,7 +191,7 @@ export default function ReedFinder() {
             };
         }).sort((a,b) => a.mfg.localeCompare(b.mfg));
 
-    }, [submissions, reeds]);
+    }, [submissions, reeds, selectedMetric]);
 
     if (isLoading) return <div className="flex h-screen items-center justify-center text-slate-500">Loading recommender...</div>;
 
@@ -192,7 +207,7 @@ export default function ReedFinder() {
                 </div>
 
                 {/* Filters */}
-                <div className="bg-white rounded-xl shadow-lg p-6 mb-8 grid grid-cols-1 md:grid-cols-4 gap-4 border border-slate-100">
+                <div className="bg-white rounded-xl shadow-lg p-6 mb-8 grid grid-cols-1 md:grid-cols-5 gap-4 border border-slate-100">
                     <label className="block">
                         <span className="text-sm font-semibold text-slate-700 block mb-1">Instrument</span>
                         <select 
@@ -261,6 +276,19 @@ export default function ReedFinder() {
                             })}
                         </select>
                     </label>
+
+                    <label className="block">
+                        <span className="text-sm font-semibold text-slate-700 block mb-1">View Metric</span>
+                        <select 
+                            className="block w-full rounded-md border-slate-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
+                            value={selectedMetric}
+                            onChange={e => setSelectedMetric(e.target.value as MetricKey)}
+                        >
+                            {Object.entries(METRICS).map(([key, config]) => (
+                                <option key={key} value={key}>{config.label}</option>
+                            ))}
+                        </select>
+                    </label>
                 </div>
                 
                 {/* Loader */}
@@ -278,16 +306,24 @@ export default function ReedFinder() {
                              <div className="flex items-center gap-6">
                                 <div className="w-1/4 min-w-[200px] text-sm font-semibold text-slate-500 uppercase tracking-wider">Reed Model</div>
                                 <div className="flex-1 text-center relative h-8 mx-8">
+                                    <h4 className="absolute -top-6 left-0 right-0 text-center text-xs font-bold text-slate-400 uppercase tracking-widest">{METRICS[selectedMetric].label}</h4>
                                     <div className="absolute inset-0 flex items-center">
-                                         {["Terrible", "Poor", "Adequate", "Good", "Great"].map((label, i) => (
-                                             <div 
-                                                key={label} 
-                                                className="absolute text-xs font-bold text-slate-400 uppercase tracking-wider -translate-x-1/2"
-                                                style={{ left: `${i * 25}%` }}
-                                             >
-                                                {label}
-                                             </div>
-                                         ))}
+                                         {METRICS[selectedMetric].axisLabels.map((label, i) => {
+                                             const count = METRICS[selectedMetric].axisLabels.length;
+                                             // Position logic
+                                             // If 3 labels: 0%, 50%, 100%
+                                             // If 5 labels: 0, 25, 50, 75, 100
+                                             const pct = (i / (count - 1)) * 100;
+                                             return (
+                                                 <div 
+                                                    key={label} 
+                                                    className="absolute text-xs font-bold text-slate-400 uppercase tracking-wider -translate-x-1/2"
+                                                    style={{ left: `${pct}%` }}
+                                                 >
+                                                    {label}
+                                                 </div>
+                                             );
+                                         })}
                                     </div>
                                 </div>
                              </div>
@@ -319,18 +355,22 @@ export default function ReedFinder() {
                                         {/* Plotted Points */}
                                         <div className="absolute inset-0 top-1/2 -translate-y-1/2 h-8"> 
                                             {row.plots.map((stat, idx) => {
-                                                const pct = ((stat.avg - 1) / 4) * 100;
+                                                 // Calculate percentage based on Min/Max of selected metric
+                                                const { min, max } = METRICS[selectedMetric];
+                                                const range = max - min;
+                                                const pct = ((stat.avg - min) / range) * 100;
+                                                
                                                 return (
                                                     <div 
                                                         key={idx}
                                                         className="absolute top-1/2 -translate-y-1/2 flex items-center justify-center w-8 h-8 rounded-full bg-indigo-600 text-white font-bold text-sm shadow-md cursor-help transition-transform hover:scale-110 hover:z-10 group"
                                                         style={{ left: `${pct}%`, transform: 'translate(-50%, -50%)' }}
-                                                        title={`Avg Rating: ${stat.avg.toFixed(1)} (${stat.count} ratings)`}
+                                                        title={`Avg: ${stat.avg.toFixed(1)} (${stat.count} ratings)`}
                                                     >
                                                         {stat.strength}
                                                         {/* Tooltip */}
                                                         <span className="absolute bottom-full mb-2 bg-slate-900 text-white text-xs py-1 px-2 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap pointer-events-none z-20 left-1/2 -translate-x-1/2">
-                                                            {stat.avg.toFixed(2)} / 5
+                                                            {stat.avg.toFixed(2)}
                                                         </span>
                                                     </div>
                                                 );
@@ -341,17 +381,24 @@ export default function ReedFinder() {
                                     {/* Mobile Vertical List */}
                                     <div className="md:hidden w-full space-y-3 mt-2">
                                         {row.plots.map((stat, idx) => {
-                                             const pct = ((stat.avg - 1) / 4) * 100;
+                                            const { min, max, axisLabels } = METRICS[selectedMetric];
+                                            const range = max - min;
+                                            const pct = ((stat.avg - min) / range) * 100;
+                                            
+                                            // Calculate dynamic label
+                                            const labelIndex = Math.round(((stat.avg - min) / range) * (axisLabels.length - 1));
+                                            const label = axisLabels[Math.min(Math.max(labelIndex, 0), axisLabels.length - 1)];
+                                             
                                              return (
                                                  <div key={idx} className="flex flex-col bg-slate-50 border border-slate-100 rounded-lg p-3">
                                                     <div className="flex justify-between items-center mb-2">
                                                         <div className="flex items-center gap-2">
                                                             <span className="font-bold text-slate-800 bg-white border border-slate-200 px-2 py-0.5 rounded text-sm">{stat.strength}</span>
                                                             <span className="text-sm text-slate-500 font-medium">
-                                                                {stat.avg >= 4.5 ? "Great" : stat.avg >= 3.5 ? "Good" : stat.avg >= 2.5 ? "Adequate" : stat.avg >= 1.5 ? "Poor" : "Terrible"}
+                                                                {label}
                                                             </span>
                                                         </div>
-                                                        <span className="text-sm font-bold text-indigo-600">{stat.avg.toFixed(1)} / 5</span>
+                                                        <span className="text-sm font-bold text-indigo-600">{stat.avg.toFixed(1)}</span>
                                                     </div>
                                                     <div className="h-2 w-full bg-slate-200 rounded-full overflow-hidden">
                                                         <div className="h-full bg-indigo-600" style={{ width: `${pct}%` }} />
