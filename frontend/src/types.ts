@@ -82,6 +82,10 @@ export interface PlayerSubmission {
     is_mouthpiece_modified: boolean;
     is_reed_modified: boolean;
     modification_details?: string;
+    mouthpiece_man_details?: string;
+    reed_man_details?: string;
+    mouthpiece_mod_details?: string;
+    reed_mod_details?: string;
     comments?: string;
 }
 

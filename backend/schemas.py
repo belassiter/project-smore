@@ -68,6 +68,12 @@ class PlayerSubmissionCreate(BaseModel):
     is_reed_modified: bool = False
     modification_details: Optional[str] = None
     
+    # New Field Details
+    mouthpiece_man_details: Optional[str] = None
+    reed_man_details: Optional[str] = None
+    mouthpiece_mod_details: Optional[str] = None
+    reed_mod_details: Optional[str] = None
+    
     comments: Optional[str] = None
 
 class PlayerSubmissionOut(PlayerSubmissionCreate):

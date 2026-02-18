@@ -70,16 +70,22 @@ class PlayerSubmission(Base):
     
     # Ratings
     suitability_rating = Column(Integer, nullable=False)
-    resistance_feel = Column(Integer, nullable=False) # -5 to +5
-    brightness_feel = Column(Integer, nullable=False) # -5 to +5
-    min_dynamic = Column(Integer, nullable=False) # 1-8
-    max_dynamic = Column(Integer, nullable=False) # 1-8
+    resistance_feel = Column(Integer, nullable=True) # -5 to +5, Optional
+    brightness_feel = Column(Integer, nullable=True) # -5 to +5, Optional
+    min_dynamic = Column(Integer, nullable=True) # 1-8, Optional
+    max_dynamic = Column(Integer, nullable=True) # 1-8, Optional
     strength_rating = Column(Integer, nullable=False) # -5 to +5
     
     # Modifications
     is_mouthpiece_modified = Column(Boolean, default=False)
     is_reed_modified = Column(Boolean, default=False)
     modification_details = Column(Text, nullable=True)
+
+    # Specific Details
+    mouthpiece_man_details = Column(Text, nullable=True)
+    reed_man_details = Column(Text, nullable=True)
+    mouthpiece_mod_details = Column(Text, nullable=True)
+    reed_mod_details = Column(Text, nullable=True)
     
     comments = Column(Text, nullable=True)
 

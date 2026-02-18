@@ -11,6 +11,8 @@ class BaffleType(str, enum.Enum):
     ROLLOVER = "Rollover"
     STEP = "Step"
     CONCAVE = "Concave"
+    HIGH = "High"
+    LOW = "Low"
 
 class ChamberSize(str, enum.Enum):
     SMALL = "Small"

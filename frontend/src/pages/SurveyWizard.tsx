@@ -60,6 +60,62 @@ const ErrorMsg = ({ field, errors }: { field: string; errors: Record<string, str
     );
 };
 
+
+const HelpPopover = ({ text }: { text: string }) => {
+    const [isOpen, setIsOpen] = useState(false);
+
+    useEffect(() => {
+        const handleClickOutside = () => {
+             // If open provided by state, close on any click.
+             // We need this because sometimes overlay/backdrop z-index strategy fails depending on parent container stacking contexts.
+             // Global click listener is safer for "close on any click".
+             if (isOpen) {
+                 setIsOpen(false);
+             }
+        };
+
+        if (isOpen) {
+            // Defer slightly to avoid the immediate click that opened it
+            setTimeout(() => {
+                document.addEventListener('click', handleClickOutside);
+            }, 0);
+        }
+        
+        return () => {
+            document.removeEventListener('click', handleClickOutside);
+        };
+    }, [isOpen]);
+
+    return (
+        <div className="relative inline-flex items-center ml-2">
+            <button
+                type="button"
+                className="flex items-center justify-center w-5 h-5 rounded-full bg-indigo-600 text-white hover:bg-indigo-700 transition-colors focus:outline-none focus:ring-2 focus:ring-offset-1 focus:ring-indigo-500 shadow-sm"
+                onClick={(e) => { 
+                    e.preventDefault(); 
+                    e.stopPropagation(); // Stop propagation so global listener doesn't immediately catch it if we didn't use timeout (but we do). 
+                    setIsOpen(!isOpen); 
+                }}
+                aria-label="More information"
+            >
+                <span className="text-xs font-bold leading-none">?</span>
+            </button>
+            
+            {isOpen && (
+                <div 
+                    className="absolute right-0 top-full mt-2 w-64 p-4 bg-white rounded-lg shadow-xl border border-slate-200 z-50 text-sm text-slate-700 leading-snug animate-in fade-in zoom-in-95 duration-200 md:left-full md:top-1/2 md:-translate-y-1/2 md:ml-3 md:mt-0 cursor-pointer"
+                >
+                    {/* Desktop Pointer */}
+                    <div className="hidden md:block absolute top-1/2 -left-2 -translate-y-1/2 w-0 h-0 border-t-[6px] border-t-transparent border-b-[6px] border-b-transparent border-r-[8px] border-r-white filter drop-shadow-sm transform -translate-x-[1px]" />
+                    {/* Mobile Pointer */}
+                    <div className="md:hidden absolute -top-2 right-1 w-0 h-0 border-l-[6px] border-l-transparent border-r-[6px] border-r-transparent border-b-[8px] border-b-white filter drop-shadow-sm" />
+                    {text}
+                </div>
+            )}
+        </div>
+    );
+};
+
 export default function SurveyWizard() {
   const [currentStep, setCurrentStep] = useState(0);
   const [isSuccess, setIsSuccess] = useState(false);
@@ -102,25 +158,42 @@ export default function SurveyWizard() {
       .catch(err => console.error(err));
   }, []);
 
-  // Filtered Options Logic
-  const uniqueMpcMfgs = Array.from(new Set(mouthpieces.map(m => m.manufacturer))).sort();
+  // 1. Filtered Logic for Manufacturers (Filter by Instrument if selected)
+  const uniqueMpcMfgs = useMemo(() => {
+    let relevantMp = mouthpieces;
+    if (formData.instrument) {
+        relevantMp = relevantMp.filter(m => m.tip_openings.some(t => t.instrument === formData.instrument));
+    }
+    return Array.from(new Set(relevantMp.map(m => m.manufacturer))).sort();
+  }, [mouthpieces, formData.instrument]);
+
   const [selectedMpcMfg, setSelectedMpcMfg] = useState<string>('');
   const [selectedMpcModel, setSelectedMpcModel] = useState<string>('');
   
-  const mpcModelsFiltered = mouthpieces.filter(m => m.manufacturer === selectedMpcMfg);
-  // Sort models alphabetically
-  const mpcModelsUnique = Array.from(new Set(mpcModelsFiltered.map(m => m.model + (m.variant ? ` ${m.variant}` : "")))).sort();
+  // 2. Filter Models by Mfg AND Instrument
+  const mpcModelsUnique = useMemo(() => {
+    if (!selectedMpcMfg || selectedMpcMfg === "Not Listed") return [];
+    
+    let relevant = mouthpieces.filter(m => m.manufacturer === selectedMpcMfg);
+    if (formData.instrument) {
+        relevant = relevant.filter(m => m.tip_openings.some(t => t.instrument === formData.instrument));
+    }
+
+    return Array.from(new Set(relevant.map(m => m.model + (m.variant ? ` ${m.variant}` : "")))).sort();
+  }, [mouthpieces, selectedMpcMfg, formData.instrument]);
   
   const getMouthpieceObj = (mfg: string, modelStr: string) => {
     return mouthpieces.find(m => m.manufacturer === mfg && (m.model + (m.variant ? ` ${m.variant}` : "") === modelStr));
   };
   const activeMouthpiece = getMouthpieceObj(selectedMpcMfg, selectedMpcModel);
+  // Reset logic handled in onChange of instrument select
   
   // Filter tip openings by selected instrument
   const instrumentTips = useMemo(() => {
-    if (!activeMouthpiece || !formData.instrument) return [];
-    return activeMouthpiece.tip_openings.filter(t => t.instrument === formData.instrument);
-  }, [activeMouthpiece, formData.instrument]);
+    if ((!activeMouthpiece && selectedMpcMfg !== "Not Listed") || !formData.instrument) return [];
+    if (selectedMpcMfg === "Not Listed") return [];
+    return activeMouthpiece?.tip_openings.filter(t => t.instrument === formData.instrument) || [];
+  }, [activeMouthpiece, formData.instrument, selectedMpcMfg]);
 
   // Ensure all tips are valid for UI, providing fallback label if missing
   const validTipOpenings = useMemo(() => {
@@ -174,46 +247,52 @@ export default function SurveyWizard() {
         if (!formData.genre) newErrors.genre = "Please select your primary genre.";
 
         if (!selectedMpcMfg) newErrors.mpcMfg = "Manufacturer is required.";
-        if (!selectedMpcModel) newErrors.mpcModel = "Model is required.";
         
-        // Strict Tip Opening Validation
-        // If the database has tip openings (even if unlabelled), we MUST have a selection.
-        if (activeMouthpiece) {
-             const totalTips = activeMouthpiece.tip_openings.length;
-             // Check if there are any tips FOR THIS INSTRUMENT
-             const compatibleTips = activeMouthpiece.tip_openings.filter(t => t.instrument === formData.instrument);
-
-             if (totalTips === 0) {
-                 // If the DB has NO tip openings for this model, we can't submit valid data.
-                 newErrors.tipOpening = "Configuration Error: This model has no tip openings defined in the database.";
-             } else if (compatibleTips.length === 0) {
-                 // If no tips for the selected instrument
-                 newErrors.tipOpening = `This model is not available for ${formData.instrument}.`;
-             } else if (!formData.tip_opening_id) {
-                 newErrors.tipOpening = "Tip opening is required for this model.";
-             } else if (!compatibleTips.find(t => t.id === formData.tip_opening_id)) {
-                 newErrors.tipOpening = "Selected tip opening does not match the chosen instrument.";
-             }
+        // Validation logic considering "Not Listed"
+        if (selectedMpcMfg !== "Not Listed") {
+            if (!selectedMpcModel) newErrors.mpcModel = "Model is required.";
+            
+            if (selectedMpcModel && selectedMpcModel !== "Not Listed") {
+                 // Strict Tip Opening Validation for known models
+                 if (activeMouthpiece) {
+                     const totalTips = activeMouthpiece.tip_openings.length;
+                     const compatibleTips = activeMouthpiece.tip_openings.filter(t => t.instrument === formData.instrument);
+    
+                     if (totalTips === 0) {
+                         newErrors.tipOpening = "Configuration Error: This model has no tip openings defined.";
+                     } else if (compatibleTips.length === 0) {
+                         newErrors.tipOpening = `This model is not available for ${formData.instrument}.`;
+                     } else if (!formData.tip_opening_id) {
+                         newErrors.tipOpening = "Tip opening is required for this model.";
+                     }
+                 }
+            }
         }
     }
 
     if (step === 2) {
         if (!selectedReedMfg) newErrors.reedMfg = "Manufacturer is required.";
-        if (!selectedReedModel) newErrors.reedModel = "Model is required.";
-        if (!formData.reed_id) newErrors.reedStrength = "Reed strength is required.";
+        
+        if (selectedReedMfg !== "Not Listed") {
+            if (!selectedReedModel) newErrors.reedModel = "Model is required.";
+            if (selectedReedModel !== "Not Listed" && !formData.reed_id) {
+                newErrors.reedStrength = "Reed strength is required.";
+            }
+        }
     }
 
     // Step 3 (Ratings)
     if (step === 3) {
         if (formData.suitability_rating === undefined) newErrors.suitability = "Please rate the overall match.";
-        if (formData.resistance_feel === undefined) newErrors.resistance = "Please rate the resistance.";
+        // Resistance is optional
         if (formData.strength_rating === undefined) newErrors.strength = "Please rate the strength match.";
-        if (formData.brightness_feel === undefined) newErrors.brightness = "Please rate the tone color.";
+        // Brightness is optional
 
-        if (formData.min_dynamic === undefined || formData.max_dynamic === undefined) {
-             newErrors.dynamics = "Please set the dynamic range.";
-        } else if ((formData.min_dynamic) > (formData.max_dynamic)) {
-            newErrors.dynamics = "Min volume cannot be louder than max volume.";
+        // Dynamics is optional
+        if (formData.min_dynamic !== undefined && formData.max_dynamic !== undefined) {
+            if ((formData.min_dynamic) > (formData.max_dynamic)) {
+               newErrors.dynamics = "Min volume cannot be louder than max volume.";
+            }
         }
     }
 
@@ -418,10 +497,13 @@ export default function SurveyWizard() {
                     
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <label className="block">
-                            <span className="text-slate-700 font-medium">Skill Level <span className="text-red-500">*</span></span>
+                             <div className="flex items-center mb-1">
+                                <span className="text-slate-700 font-medium">Skill Level <span className="text-red-500">*</span></span>
+                                <HelpPopover text="If you're a student, you're likely a beginner or intermediate. If you're an adult that just plays for fun, enthusiast probably fits. If you're at a level where you're making money sometimes, but it's not your full-time gig, the Semi-Pro is a good fit. If playing sax is your primary profession, or you're primarily playing with people in that category, choose Pro." />
+                            </div>
                             <select 
                                 className={cn(
-                                    "mt-1 block w-full rounded-md border-slate-300 bg-slate-50 p-2.5 shadow-sm transition-colors",
+                                    "block w-full rounded-md border-slate-300 bg-slate-50 p-2.5 shadow-sm transition-colors",
                                     errors.skill_level && "border-red-300 focus:border-red-500 focus:ring-red-500 bg-red-50"
                                 )}
                                 value={formData.skill_level || ''}
@@ -479,8 +561,10 @@ export default function SurveyWizard() {
                                 )}
                                 value={formData.instrument || ''}
                                 onChange={e => {
-                                    setFormData({...formData, instrument: e.target.value as InstrumentType});
+                                    setFormData({...formData, instrument: e.target.value as InstrumentType, mouthpiece_id: undefined, tip_opening_id: undefined});
                                     if(errors.instrument) setErrors({...errors, instrument: ''});
+                                    setSelectedMpcMfg('');
+                                    setSelectedMpcModel('');
                                 }}
                             >
                                 <option value="">Select Instrument</option>
@@ -531,8 +615,10 @@ export default function SurveyWizard() {
                             <select 
                                 className={cn(
                                     "mt-1 block w-full rounded-md border-slate-300 bg-slate-50 p-2.5 shadow-sm transition-colors",
-                                    errors.mpcMfg && "border-red-300 bg-red-50"
+                                    errors.mpcMfg && "border-red-300 bg-red-50",
+                                    !formData.instrument && "opacity-50 cursor-not-allowed"
                                 )}
+                                disabled={!formData.instrument}
                                 value={selectedMpcMfg}
                                 onChange={e => {
                                     setSelectedMpcMfg(e.target.value);
@@ -543,84 +629,140 @@ export default function SurveyWizard() {
                             >
                                 <option value="">Select Manufacturer</option>
                                 {uniqueMpcMfgs.map(m => <option key={m} value={m}>{m}</option>)}
+                                <option value="Not Listed">Not Listed</option>
                             </select>
                             <ErrorMsg field="mpcMfg" errors={errors} />
                         </label>
 
-                        <label className="block">
-                            <span className={cn("text-slate-700 font-medium", !selectedMpcMfg && "text-slate-400")}>Model <span className="text-red-500">*</span></span>
-                            <select 
-                                className={cn(
-                                    "mt-1 block w-full rounded-md border-slate-300 bg-slate-50 p-2.5 shadow-sm disabled:bg-slate-100 disabled:text-slate-400",
-                                    errors.mpcModel && "border-red-300 bg-red-50"
-                                )}
-                                disabled={!selectedMpcMfg}
-                                value={selectedMpcModel}
-                                onChange={e => {
-                                    const val = e.target.value;
-                                    setSelectedMpcModel(val);
-                                    const mpc = getMouthpieceObj(selectedMpcMfg, val);
-                                    
-                                    // Auto-select logic
-                                    let autoTipId: string | undefined = undefined;
-                                    if (mpc && formData.instrument) {
-                                        const instTips = mpc.tip_openings.filter(t => t.instrument === formData.instrument);
-                                        // Since we treat all as valid now with fallback labels:
-                                        if (instTips.length === 1) {
-                                            autoTipId = instTips[0].id;
-                                        }
-                                    }
-
-                                    setFormData(prev => ({...prev, mouthpiece_id: mpc?.id, tip_opening_id: autoTipId}));
-                                    setErrors(p => ({...p, mpcModel: '', tipOpening: ''}));
-                                }}
-                            >
-                                <option value="">Select Model</option>
-                                {mpcModelsUnique.map(m => <option key={m} value={m}>{m}</option>)}
-                            </select>
-                            <ErrorMsg field="mpcModel" errors={errors} />
-                        </label>
-
-                        {/* Tip Opening Selection */}
-                        {activeMouthpiece && validTipOpenings.length > 0 && (
-                            <label className="block animate-in fade-in zoom-in-95 duration-200">
-                                <span className={cn("text-slate-700 font-medium", !formData.mouthpiece_id && "text-slate-400")}>Tip Opening <span className="text-red-500">*</span></span>
+                        {/* If Mfg is Not Listed, don't show Model/Tip dropdowns. Show text area instead. */}
+                        {selectedMpcMfg === "Not Listed" ? (
+                             <div className="space-y-4 animate-in fade-in slide-in-from-top-2">
+                                <label className="block">
+                                    <span className="text-slate-700 font-medium">Tell us about your mouthpiece <span className="text-red-500">*</span></span>
+                                    <p className="text-sm text-slate-500 mb-2">Please include: Manufacturer, Model, Tip Opening size (if known), and any other info.</p>
+                                    <textarea 
+                                        className="w-full rounded-md border-slate-300 p-3 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 min-h-[100px]"
+                                        placeholder="e.g. Berg Larsen 105/3 SMS, bronze. Or Beechler 7*, 0.085, vintage."
+                                        value={formData.mouthpiece_man_details || ''}
+                                        onChange={e => setFormData({...formData, mouthpiece_man_details: e.target.value})}
+                                    />
+                                    <p className="text-xs text-slate-400 mt-1">We may add this to our database in the future.</p>
+                                </label>
+                            </div>
+                        ) : (
+                            <>
+                            <label className="block">
+                                <span className={cn("text-slate-700 font-medium", !selectedMpcMfg && "text-slate-400")}>Model <span className="text-red-500">*</span></span>
                                 <select 
                                     className={cn(
-                                        "mt-1 block w-full rounded-md border-slate-300 bg-slate-50 p-2.5 shadow-sm disabled:bg-slate-100",
-                                        errors.tipOpening && "border-red-300 bg-red-50"
+                                        "mt-1 block w-full rounded-md border-slate-300 bg-slate-50 p-2.5 shadow-sm disabled:bg-slate-100 disabled:text-slate-400",
+                                        errors.mpcModel && "border-red-300 bg-red-50"
                                     )}
-                                    disabled={!formData.mouthpiece_id}
-                                    value={formData.tip_opening_id || ''}
+                                    disabled={!selectedMpcMfg}
+                                    value={selectedMpcModel}
                                     onChange={e => {
-                                        setFormData(p => ({...p, tip_opening_id: e.target.value}));
-                                        if(errors.tipOpening) setErrors(p => ({...p, tipOpening: ''}));
+                                        const val = e.target.value;
+                                        setSelectedMpcModel(val);
+                                        const mpc = getMouthpieceObj(selectedMpcMfg, val);
+                                        
+                                        // Auto-select logic
+                                        let autoTipId: string | undefined = undefined;
+                                        if (mpc && formData.instrument) {
+                                            const instTips = mpc.tip_openings.filter(t => t.instrument === formData.instrument);
+                                            // Since we treat all as valid now with fallback labels:
+                                            if (instTips.length === 1) {
+                                                autoTipId = instTips[0].id;
+                                            }
+                                        }
+
+                                        setFormData(prev => ({...prev, mouthpiece_id: mpc?.id, tip_opening_id: autoTipId}));
+                                        setErrors(p => ({...p, mpcModel: '', tipOpening: ''}));
                                     }}
                                 >
-                                    <option value="">Select Tip Opening</option>
-                                    {validTipOpenings.map(t => (
-                                        <option key={t.id} value={t.id}>{t.label}</option>
-                                    ))}
+                                    <option value="">Select Model</option>
+                                    {mpcModelsUnique.map(m => <option key={m} value={m}>{m}</option>)}
+                                    <option value="Not Listed">Not Listed</option>
                                 </select>
-                                <ErrorMsg field="tipOpening" errors={errors} />
-                                
-                                {(() => {
-                                    const displayTip = selectedTip || validTipOpenings.find(t => t.id === formData.tip_opening_id);
-                                    if (!displayTip) return null;
-                                    return (
-                                        <div className="mt-3 flex items-center p-3 bg-indigo-50 border border-indigo-100 rounded-lg text-sm text-indigo-700">
-                                            <span className="font-semibold mr-2">Specs:</span>
-                                            {displayTip.opening_inch.toFixed(3)}" ({ (displayTip.opening_inch * 25.4).toFixed(2) } mm)
-                                            {displayTip.facing_length && <span className="mx-2">•</span>}
-                                            {displayTip.facing_length && <span>Facing: {displayTip.facing_length}</span>}
-                                        </div>
-                                    );
-                                })()}
+                                <ErrorMsg field="mpcModel" errors={errors} />
                             </label>
+    
+                            {/* Tip Opening Selection */}
+                            {(selectedMpcModel === "Not Listed") ? (
+                                <div className="space-y-4 animate-in fade-in slide-in-from-top-2 mt-4">
+                                    <label className="block">
+                                        <span className="text-slate-700 font-medium">Tell us about this model <span className="text-red-500">*</span></span>
+                                        <p className="text-sm text-slate-500 mb-2">Please include the Model Name and Tip Opening size.</p>
+                                        <textarea 
+                                            className="w-full rounded-md border-slate-300 p-3 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
+                                            placeholder="e.g. Super Jet 7"
+                                            value={formData.mouthpiece_man_details || ''}
+                                            onChange={e => setFormData({...formData, mouthpiece_man_details: e.target.value})}
+                                        />
+                                    </label>
+                                </div>
+                            ) : (
+                                activeMouthpiece && validTipOpenings.length > 0 && (
+                                    <label className="block animate-in fade-in zoom-in-95 duration-200">
+                                        <span className={cn("text-slate-700 font-medium", !formData.mouthpiece_id && "text-slate-400")}>Tip Opening <span className="text-red-500">*</span></span>
+                                        <select 
+                                            className={cn(
+                                                "mt-1 block w-full rounded-md border-slate-300 bg-slate-50 p-2.5 shadow-sm disabled:bg-slate-100",
+                                                errors.tipOpening && "border-red-300 bg-red-50"
+                                            )}
+                                            disabled={!formData.mouthpiece_id}
+                                            value={formData.tip_opening_id || ''}
+                                            onChange={e => {
+                                                setFormData(p => ({...p, tip_opening_id: e.target.value}));
+                                                if(errors.tipOpening) setErrors(p => ({...p, tipOpening: ''}));
+                                            }}
+                                        >
+                                            <option value="">Select Tip Opening</option>
+                                            {validTipOpenings.map(t => (
+                                                <option key={t.id} value={t.id}>{t.label}</option>
+                                            ))}
+                                            {/* Note: We don't really support "Not Listed" for tip opening here easily
+                                                because tip_opening_id is a UUID foreign key. 
+                                                For now, if they can't find their tip, they might be stuck or choose nearest. 
+                                                But per user request, we should add it. */}
+                                            <option value="Not Listed">Not Listed</option>
+                                        </select>
+                                        <ErrorMsg field="tipOpening" errors={errors} />
+                                        
+                                        {/* If they chose Not Listed for Tip Opening */}
+                                        {formData.tip_opening_id === "Not Listed" && (
+                                             <div className="mt-2 animate-in fade-in">
+                                                 <label className="block">
+                                                    <span className="text-sm text-slate-700 font-medium">What is your tip opening size?</span>
+                                                    <input 
+                                                        type="text" 
+                                                        className="mt-1 block w-full rounded-md border-slate-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                                                        placeholder="e.g. 7*, .105, 6"
+                                                        onChange={e => setFormData(p => ({...p, mouthpiece_man_details: (p.mouthpiece_man_details ? p.mouthpiece_man_details + "\nTip: " : "Tip: ") + e.target.value}))}
+                                                    />
+                                                </label>
+                                             </div>
+                                        )}
+        
+                                        {(() => {
+                                            const displayTip = selectedTip || validTipOpenings.find(t => t.id === formData.tip_opening_id);
+                                            if (!displayTip) return null;
+                                            return (
+                                                <div className="mt-3 flex items-center p-3 bg-indigo-50 border border-indigo-100 rounded-lg text-sm text-indigo-700">
+                                                    <span className="font-semibold mr-2">Specs:</span>
+                                                    {displayTip.opening_inch.toFixed(3)}" ({ (displayTip.opening_inch * 25.4).toFixed(2) } mm)
+                                                    {displayTip.facing_length && <span className="mx-2">•</span>}
+                                                    {displayTip.facing_length && <span>Facing: {displayTip.facing_length}</span>}
+                                                </div>
+                                            );
+                                        })()}
+                                    </label>
+                                )
+                            )}
+                            </>
                         )}
                         
-                        <div className="pt-4 border-t border-slate-100 mt-6">
-                             <label className="flex items-center space-x-3 cursor-pointer group">
+                        <div className="pt-4 border-t border-slate-100 mt-6 animate-in fade-in">
+                             <label className="flex items-center space-x-3 cursor-pointer group mb-2">
                                 <input 
                                     type="checkbox" 
                                     className="h-5 w-5 rounded border-slate-300 text-indigo-600 focus:ring-indigo-500 cursor-pointer"
@@ -629,6 +771,15 @@ export default function SurveyWizard() {
                                 />
                                 <span className="text-slate-700 group-hover:text-slate-900">This mouthpiece has been refaced or modified.</span>
                             </label>
+                            
+                            {formData.is_mouthpiece_modified && (
+                                <textarea 
+                                    className="w-full rounded-md border-slate-300 p-3 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 mt-2 text-sm"
+                                    placeholder="Describe modifications (e.g. 'Tip opened to .085', 'Baffle added')..."
+                                    value={formData.mouthpiece_mod_details || ''}
+                                    onChange={e => setFormData(p => ({...p, mouthpiece_mod_details: e.target.value}))}
+                                />
+                            )}
                         </div>
                     </div>
                 </div>
@@ -660,55 +811,106 @@ export default function SurveyWizard() {
                             >
                                 <option value="">Select Manufacturer</option>
                                 {uniqueReedMfgs.map(m => <option key={m} value={m}>{m}</option>)}
+                                <option value="Not Listed">Not Listed</option>
                             </select>
                             <ErrorMsg field="reedMfg" errors={errors} />
                         </label>
 
-                        <label className="block">
-                            <span className={cn("text-slate-700 font-medium", !selectedReedMfg && "text-slate-400")}>Model / Cut <span className="text-red-500">*</span></span>
-                            <select 
-                                className={cn(
-                                    "mt-1 block w-full rounded-md border-slate-300 bg-slate-50 p-2.5 shadow-sm disabled:bg-slate-100",
-                                    errors.reedModel && "border-red-300 bg-red-50"
-                                )}
-                                disabled={!selectedReedMfg}
-                                value={selectedReedModel}
-                                onChange={e => {
-                                    setSelectedReedModel(e.target.value);
-                                    setFormData(p => ({...p, reed_id: undefined}));
-                                    setErrors(p => ({...p, reedModel: '', reedStrength: ''}));
-                                }}
-                            >
-                                <option value="">Select Model</option>
-                                {reedModelsUnique.map(m => <option key={m} value={m}>{m}</option>)}
-                            </select>
-                            <ErrorMsg field="reedModel" errors={errors} />
-                        </label>
-
-                        <label className="block">
-                            <span className={cn("text-slate-700 font-medium", !selectedReedModel && "text-slate-400")}>Strength <span className="text-red-500">*</span></span>
-                            <select 
-                                className={cn(
-                                    "mt-1 block w-full rounded-md border-slate-300 bg-slate-50 p-2.5 shadow-sm disabled:bg-slate-100",
-                                    errors.reedStrength && "border-red-300 bg-red-50"
-                                )}
-                                disabled={!selectedReedModel}
-                                value={formData.reed_id || ''}
-                                onChange={e => {
-                                    setFormData(p => ({...p, reed_id: e.target.value}));
-                                    if(errors.reedStrength) setErrors({...errors, reedStrength: ''});
-                                }}
-                            >
-                                <option value="">Select Strength</option>
-                                {reedStrengthsFiltered.map(r => (
-                                    <option key={r.id} value={r.id}>{r.strength_label}</option>
-                                ))}
-                            </select>
-                            <ErrorMsg field="reedStrength" errors={errors} />
-                        </label>
+                        {/* If Reed Mfg is Not Listed, don't show Model/Strength dropdowns */}
+                        {selectedReedMfg === "Not Listed" ? (
+                             <div className="space-y-4 animate-in fade-in slide-in-from-top-2">
+                                <label className="block">
+                                    <span className="text-slate-700 font-medium">Tell us about your reed <span className="text-red-500">*</span></span>
+                                    <p className="text-sm text-slate-500 mb-2">Please include: Manufacturer, Model/Cut, and Strength.</p>
+                                    <textarea 
+                                        className="w-full rounded-md border-slate-300 p-3 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 min-h-[100px]"
+                                        placeholder="e.g. Rigotti Gold 3 Strong"
+                                        value={formData.reed_man_details || ''}
+                                        onChange={e => setFormData({...formData, reed_man_details: e.target.value})}
+                                    />
+                                    <p className="text-xs text-slate-400 mt-1">We may add this to our database in the future.</p>
+                                </label>
+                            </div>
+                        ) : (
+                            <>
+                            <label className="block">
+                                <span className={cn("text-slate-700 font-medium", !selectedReedMfg && "text-slate-400")}>Model / Cut <span className="text-red-500">*</span></span>
+                                <select 
+                                    className={cn(
+                                        "mt-1 block w-full rounded-md border-slate-300 bg-slate-50 p-2.5 shadow-sm disabled:bg-slate-100",
+                                        errors.reedModel && "border-red-300 bg-red-50"
+                                    )}
+                                    disabled={!selectedReedMfg}
+                                    value={selectedReedModel}
+                                    onChange={e => {
+                                        setSelectedReedModel(e.target.value);
+                                        setFormData(p => ({...p, reed_id: undefined}));
+                                        setErrors(p => ({...p, reedModel: '', reedStrength: ''}));
+                                    }}
+                                >
+                                    <option value="">Select Model</option>
+                                    {reedModelsUnique.map(m => <option key={m} value={m}>{m}</option>)}
+                                    <option value="Not Listed">Not Listed</option>
+                                </select>
+                                <ErrorMsg field="reedModel" errors={errors} />
+                            </label>
+    
+                            {(selectedReedModel === "Not Listed") ? (
+                                <div className="space-y-4 animate-in fade-in slide-in-from-top-2 mt-4">
+                                    <label className="block">
+                                        <span className="text-slate-700 font-medium">Tell us about this reed <span className="text-red-500">*</span></span>
+                                        <p className="text-sm text-slate-500 mb-2">Please include the Model/Cut Name and Strength.</p>
+                                        <textarea 
+                                            className="w-full rounded-md border-slate-300 p-3 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
+                                            placeholder="e.g. V12 Strength 3.5"
+                                            value={formData.reed_man_details || ''}
+                                            onChange={e => setFormData({...formData, reed_man_details: e.target.value})}
+                                        />
+                                    </label>
+                                </div>
+                            ) : (
+                                <label className="block">
+                                    <span className={cn("text-slate-700 font-medium", !selectedReedModel && "text-slate-400")}>Strength <span className="text-red-500">*</span></span>
+                                    <select 
+                                        className={cn(
+                                            "mt-1 block w-full rounded-md border-slate-300 bg-slate-50 p-2.5 shadow-sm disabled:bg-slate-100",
+                                            errors.reedStrength && "border-red-300 bg-red-50"
+                                        )}
+                                        disabled={!selectedReedModel}
+                                        value={formData.reed_id || ''}
+                                        onChange={e => {
+                                            setFormData(p => ({...p, reed_id: e.target.value}));
+                                            if(errors.reedStrength) setErrors({...errors, reedStrength: ''});
+                                        }}
+                                    >
+                                        <option value="">Select Strength</option>
+                                        {reedStrengthsFiltered.map(r => (
+                                            <option key={r.id} value={r.id}>{r.strength_label}</option>
+                                        ))}
+                                        <option value="Not Listed">Not Listed</option>
+                                    </select>
+                                    <ErrorMsg field="reedStrength" errors={errors} />
+                                    
+                                    {formData.reed_id === "Not Listed" && (
+                                         <div className="mt-2 animate-in fade-in">
+                                             <label className="block">
+                                                <span className="text-sm text-slate-700 font-medium">What is your reed strength?</span>
+                                                <input 
+                                                    type="text" 
+                                                    className="mt-1 block w-full rounded-md border-slate-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                                                    placeholder="e.g. 3.25, Medium Hard"
+                                                    onChange={e => setFormData(p => ({...p, reed_man_details: (p.reed_man_details ? p.reed_man_details + "\nStrength: " : "Strength: ") + e.target.value}))}
+                                                />
+                                            </label>
+                                         </div>
+                                    )}
+                                </label>
+                            )}
+                            </>
+                        )}
                         
-                         <div className="pt-4 border-t border-slate-100 mt-6">
-                             <label className="flex items-center space-x-3 cursor-pointer group">
+                         <div className="pt-4 border-t border-slate-100 mt-6 md-4">
+                             <label className="flex items-center space-x-3 cursor-pointer group mb-2">
                                 <input 
                                     type="checkbox" 
                                     className="h-5 w-5 rounded border-slate-300 text-indigo-600 focus:ring-indigo-500 cursor-pointer"
@@ -717,6 +919,15 @@ export default function SurveyWizard() {
                                 />
                                 <span className="text-slate-700 group-hover:text-slate-900">This reed is clipped or modified.</span>
                             </label>
+                            
+                            {formData.is_reed_modified && (
+                                <textarea 
+                                    className="w-full rounded-md border-slate-300 p-3 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 mt-2 text-sm"
+                                    placeholder="Describe modifications (e.g. 'Clipped', 'Sanded')..."
+                                    value={formData.reed_mod_details || ''}
+                                    onChange={e => setFormData(p => ({...p, reed_mod_details: e.target.value}))}
+                                />
+                            )}
                         </div>
                     </div>
                 </div>
@@ -733,7 +944,10 @@ export default function SurveyWizard() {
                     {/* 1. Overall Match (Suitability) */}
                     <div className="space-y-4 pt-2">
                         <div className="flex justify-between items-baseline">
-                            <label className="font-medium text-slate-700">Overall Match <span className="text-red-500">*</span></label>
+                            <label className="font-medium text-slate-700 flex items-center">
+                                Overall Match <span className="text-red-500 mr-1">*</span>
+                                <HelpPopover text="How do you feel about this setup, overall? Do you use it regularly? Is it good enough, but not as good as you want? Do you only use it as a backup?" />
+                            </label>
                             <span className="text-indigo-600 font-bold text-lg">
                                 {formData.suitability_rating !== undefined ? `${formData.suitability_rating} / 5` : "-"}
                             </span>
@@ -755,7 +969,10 @@ export default function SurveyWizard() {
                     {/* 2. Strength Match */}
                     <div className="space-y-4 pt-6 border-t border-slate-100">
                         <div className="flex justify-between">
-                            <label className="font-medium text-slate-700">Strength Match <span className="text-red-500">*</span></label>
+                            <label className="font-medium text-slate-700 flex items-center">
+                                Strength Match <span className="text-red-500 mr-1">*</span>
+                                <HelpPopover text="How does the reed strength match the mouthpiece? Reeds that are too hard will often feel stuffy, difficult to blow, and have a limited dynamic range. Reeds that are too soft are easy to play, but will distort easily at higher dynamics." />
+                            </label>
                             <span className="text-slate-500 font-medium">
                                 {formData.strength_rating === undefined ? "Select..." :
                                  formData.strength_rating === 0 ? "Perfect" : 
@@ -779,7 +996,10 @@ export default function SurveyWizard() {
                     {/* 3. Resistance */}
                     <div className="space-y-4 pt-6 border-t border-slate-100">
                         <div className="flex justify-between">
-                            <label className="font-medium text-slate-700">Resistance <span className="text-red-500">*</span></label>
+                            <label className="font-medium text-slate-700 flex items-center">
+                                Resistance
+                                <HelpPopover text='How much does this setup push back at you? Note: some people prefer a more open or resistive setup, depending on the genre and personal tastes. So this is not a "good/bad" scale.' />
+                            </label>
                             <span className="text-slate-500 font-medium">
                                 {formData.resistance_feel === undefined ? "Select..." :
                                  formData.resistance_feel === 0 ? "Medium" : 
@@ -803,7 +1023,10 @@ export default function SurveyWizard() {
                     {/* 4. Tone Color */}
                     <div className="space-y-4 pt-6 border-t border-slate-100">
                          <div className="flex justify-between">
-                            <label className="font-medium text-slate-700">Tone Color <span className="text-red-500">*</span></label>
+                            <label className="font-medium text-slate-700 flex items-center">
+                                Tone Color
+                                <HelpPopover text="Try to think of this objectively, separate from your preferences. Bright setups are more piercing, with lots of high frequencies. Darker setups are more mellow, without a lot of highs." />
+                            </label>
                             <span className="text-slate-500 font-medium">
                                 {formData.brightness_feel === undefined ? "Select..." :
                                  formData.brightness_feel === 0 ? "Neutral" : 
@@ -826,7 +1049,10 @@ export default function SurveyWizard() {
 
                     {/* 5. Dynamic Range */}
                     <div className="space-y-4 pt-8 border-t border-slate-100">
-                        <label className="font-medium text-slate-700 block mb-4">Comfortable Dynamic Range <span className="text-red-500">*</span></label>
+                        <label className="font-medium text-slate-700 mb-4 flex items-center">
+                            Comfortable Dynamic Range
+                            <HelpPopover text="Give thought to how quietly/loudly you can play easily. Yeah, you can get a wide open jazz mouthpiece to play p if you really struggle, but the goal here is to capture the comfortable volume range." />
+                        </label>
                         
                         <div className="px-2 pb-8">
                              <Slider 
@@ -852,20 +1078,6 @@ export default function SurveyWizard() {
                         </div>
                          <ErrorMsg field="dynamics" errors={errors} />
                     </div>
-
-                    
-                    {/* Modification Details if any flag is set */}
-                    {(formData.is_mouthpiece_modified || formData.is_reed_modified) && (
-                         <div className="space-y-2 pt-4 border-t border-slate-100 animated-in fade-in">
-                             <label className="font-medium text-slate-700">Modification Details</label>
-                             <textarea 
-                                className="w-full rounded-md border-slate-300 p-3 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
-                                placeholder="Describe your modifications (e.g. 'Tip opened to .085', 'Clipped 1mm')..."
-                                value={formData.modification_details || ''}
-                                onChange={e => setFormData({...formData, modification_details: e.target.value})}
-                             />
-                         </div>
-                    )}
 
                     <div className="space-y-2 pt-2">
                          <label className="font-medium text-slate-700">Additional Comments</label>

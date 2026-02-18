@@ -1,5 +1,64 @@
 # Copilot Journal
 
+## 2026-02-19 14:00
+User Prompt: "Supabase Lint: 6 errors. RLS Disabled in Public (x5), Security Definer View (x1). Fix them."
+Changes:
+- **Database Migration**: Created `alembic/versions/a97e38fad9dd_enable_rls_and_policies.py` to:
+    - Enable Row Level Security (RLS) on `ref_mouthpieces`, `ref_tip_openings`, `ref_reeds`, `player_submissions`.
+    - Create permissive policies for `public` read access on all tables (Reference data is public).
+    - Create permissive policy for `public` insert access on `player_submissions` (Anonymous submissions allowed).
+    - Recreate `view_ref_tip_openings_full` with `WITH (security_invoker=true)` to resolve the Security Definer warning.
+- **Verification**:
+    - `npm run lint --prefix frontend`: Passed.
+    - `npm test --prefix frontend`: Passed (3/3 test files).
+    - `npm run build --prefix frontend`: Passed.
+    - `npm run test:backend`: Passed.
+
+## 2026-02-18 22:55
+User Prompt: "Separate text fields for 'Not Listed' items and 'Modifications' (Mouthpiece/Reed). Add 'Not Listed' to Reed Strength. Make Resistance, Tone, and Dynamics optional in Evaluation. Move Modification details to be specific to the item."
+Changes:
+- **Database Schema**: 
+    - Added `mouthpiece_man_details`, `reed_man_details`, `mouthpiece_mod_details`, `reed_mod_details` columns to `player_submissions` table via migration/update script.
+    - Updated `resistance_feel`, `brightness_feel`, `min_dynamic`, `max_dynamic` columns to be `NULLABLE`.
+    - Created and ran `migrate_schema_v2.py` to safely migrate the local SQLite database.
+- **Backend Models**:
+    - Updated `PlayerSubmission` in `backend/models.py` to include new text fields and make rating fields optional.
+- **Frontend Types**:
+    - Updated `PlayerSubmission` interface in `frontend/src/types.ts` to reflect the updated schema.
+- **Frontend UI (`SurveyWizard.tsx`)**:
+    - **Separate Details**: 
+        - Mouthpiece Manufacturer/Model/Tip "Not Listed" now binds to `mouthpiece_man_details`.
+        - Reed Manufacturer/Model/Strength "Not Listed" now binds to `reed_man_details`.
+    - **Reed Strength**: Added "Not Listed" option to strength dropdown and a conditional text input.
+    - **Modifications**:
+        - Moved modification details text areas to be immediately below their respective "Is Modified" checkboxes (Mouthpiece/Reed).
+        - Bound to `mouthpiece_mod_details` and `reed_mod_details` respectively.
+        - Removed the generic "Modification Details" section from Step 4.
+    - **Optional Ratings**:
+        - Removed asterisk `*` from Resistance, Tone Color, and Dynamic Range labels.
+        - Updated `validateStep` to allow these fields to be skipped/undefined.
+- **Verification**:
+    - `npm run lint --prefix frontend`: Passed.
+    - `npm run test:frontend`: Passed.
+    - `npm run test:backend`: Passed.
+    - `npm run build --prefix frontend`: Passed.
+
+## 2026-02-18 21:32
+User Prompt: "Make the help popovers close on any click. Add 'Not Listed' support to Mouthpieces (Mfg, Model) and Reeds (Mfg, Model), showing a text area for details if selected. Ensure validation and navigation rules are preserved."
+Changes:
+- **UI Update**: `HelpPopover` now registers a global click listener (via `useEffect`) when open to close on *any* click, enhancing mobile/touch usability.
+- **Feature Add**: Added "Not Listed" option to `uniqueMpcMfgs`, `mpcModelsUnique`, `uniqueReedMfgs`, and `reedModelsUnique` arrays in `SurveyWizard.tsx`.
+- **Logic Update**: Implemented conditional rendering in `SurveyWizard.tsx` to show a `<textarea>` for `modification_details` when "Not Listed" is selected at any level, while hiding downstream dropdowns.
+- **Validation Update**: Updated `validateStep` logic to bypass `Required` checks for downstream fields (e.g., Model, Tip Opening) if a parent field is set to "Not Listed".
+- **Bug Fix**: Restored missing `selectedTip` declaration and `uniqueReedMfgs` usage which caused build errors during the refactor.
+
+## 2026-02-17 20:38
+User Prompt: "I added some more options to baffletype and now it's throwing an error. It should support: STRAIGHT, ROLLOVER, STEP, CONCAVE, HIGH, LOW"
+Changes:
+- **Enum Update**: Modified `backend/enums.py` to add `HIGH = "High"` and `LOW = "Low"` to `BaffleType`.
+- **Database Schema**: Created and executed `fix_enum.py` to `ALTER TYPE baffletype ADD VALUE` for "High" and "Low" in the existing Postgres database.
+- **Verification**: Confirmed enum values are in Python codebase and database type.
+
 ## 2026-02-10 17:35
 User Prompt: "Add dropdown to Reed Recommender to view different metric types (Overall, Strength, Resistance, Tone, Dynamics), updating visualization and labels accordingly."
 Changes:
