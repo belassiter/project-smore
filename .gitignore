@@ -49,6 +49,9 @@ frontend/.env.production.local
 .DS_Store
 Thumbs.db
 
+# Backups
+backups/
+
 # Local DB
 *.db
 *.sqlite

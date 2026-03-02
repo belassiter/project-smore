@@ -1,7 +1,7 @@
 from fastapi import FastAPI, Depends, HTTPException, status
 from fastapi.middleware.cors import CORSMiddleware
 from sqlalchemy.orm import Session
-from typing import List
+from typing import List, Optional
 from contextlib import asynccontextmanager
 
 from backend import crud, models, schemas
@@ -59,3 +59,50 @@ def read_submissions_by_mouthpiece(mouthpiece_id: str, db: Session = Depends(get
 def get_active_mouthpieces(db: Session = Depends(get_db)):
     ids = crud.get_active_mouthpiece_ids(db)
     return [str(i[0]) for i in ids]
+
+@app.get("/api/v1/stats/exploration", response_model=List[schemas.ExplorationDataPoint])
+def get_exploration_data(instrument: Optional[str] = None, db: Session = Depends(get_db)):
+    return crud.get_exploration_data(db, instrument=instrument)
+
+@app.get("/api/v1/stats/scatter_data", response_model=List[schemas.ScatterDataPoint])
+def get_scatter_data(db: Session = Depends(get_db)):
+    """
+    Returns aggregated data for scatter plots:
+    - Grouped by (mouthpiece, tip, reed)
+    - Averaged ratings
+    - Count of submissions
+    """
+    data = crud.get_aggregated_scatter_data(db)
+    
+    # Map the SQLAlchemy Row objects to the Pydantic model
+    return [
+        schemas.ScatterDataPoint(
+            mouthpiece_id=row.mouthpiece_id,
+            tip_opening_id=row.tip_opening_id,
+            reed_id=row.reed_id,
+            
+            mouthpiece_manufacturer=row.mouthpiece_manufacturer or "Unknown",
+            mouthpiece_model=row.mouthpiece_model or "Unknown",
+            mouthpiece_material=row.mouthpiece_material,
+            baffle_type=row.baffle_type,
+            chamber_size=row.chamber_size,
+            
+            tip_label=row.tip_label,
+            tip_opening_inch=float(row.tip_opening_inch) if row.tip_opening_inch else 0.0,
+            facing_length=row.facing_length,
+            
+            reed_manufacturer=row.reed_manufacturer,
+            reed_model=row.reed_model,
+            reed_strength=row.reed_strength,
+            reed_cut=row.reed_cut,
+            reed_material=row.reed_material,
+            
+            submission_count=row.submission_count,
+            avg_suitability=float(row.avg_suitability) if row.avg_suitability else 0.0,
+            avg_resistance=float(row.avg_resistance) if row.avg_resistance else None,
+            avg_brightness=float(row.avg_brightness) if row.avg_brightness else None,
+            avg_min_dynamic=float(row.avg_min_dynamic) if row.avg_min_dynamic else None,
+            avg_max_dynamic=float(row.avg_max_dynamic) if row.avg_max_dynamic else None
+        )
+        for row in data
+    ]

@@ -4,7 +4,7 @@
 **Mission:** Create a comprehensive, crowdsourced dataset of saxophone mouthpiece and reed combinations to build a "Reed Recommender" engine and provide structured data for academic acoustical research.
 
 **Core Value Propositions:**
-1.  **The Survey:** A structured data collection tool to gather "real-world" player setups (Subjective feedback + Objective gear data).
+1.  **The Survey ("The Wizard"):** A structured, multi-step data collection tool to gather "real-world" player setups (Subjective feedback + Objective gear data).
 2.  **The Recommender:** A tool that suggests reeds based on mouthpiece geometry and other user preferences (e.g., "If you play a Meyer 5M, 40% of users prefer a Vandoren Java 2.5").
 3.  **The Data Explorer:** A public interface for researchers to analyze trends (e.g., Tip Opening vs. Reed Strength correlations).
 
@@ -13,77 +13,98 @@
 ## 2. Technical Architecture
 
 ### The "Split Stack"
-* **Frontend:** React (Vite + Tailwind CSS).
-    * *Hosting:* Static HTML/JS uploaded to a branded web server via FTP.
+* **Frontend:** React (Vite + Tailwind CSS + TypeScript).
+    * *Hosting:* Static HTML/JS.
+    * *Ui Library:* Lucide React (Icons), Recharts (Data Viz).
 * **Backend API:** FastAPI (Python).
-    * *Hosting:* Render.com (Free Tier) or Railway.
     * *Role:* Handles logic, statistical correlations, and database transactions.
 * **Database:** Supabase (PostgreSQL).
-    * *Role:* Relational data storage, Auth (optional), and row-level security.
+    * *Role:* Relational data storage, Row-Level Security (RLS).
+    * *Migration Tool:* Alembic.
+* **Testing:**
+    * *Frontend:* Vitest.
+    * *Backend:* Pytest.
 
-### CI/CD Pipeline (GitHub Actions)
-1.  **Trigger:** Push to `main` branch.
-2.  **Job 1 (Test):** Runs `pytest` (Backend) and `Vitest` (Frontend).
-3.  **Job 2 (Deploy Backend):** If tests pass, trigger Render deploy hook.
-4.  **Job 3 (Deploy Frontend):** If tests pass, build React app and FTP `dist/` folder to the web server.
+### CI/CD & DevOps
+*   **Trigger:** Push to `main` branch.
+*   **Tasks:** Linting (ESLint), Testing (Vitest, Pytest), Building.
 
 ---
 
 ## 3. Database Schema (PostgreSQL/Supabase)
 
 ### A. Reference Tables (Static Data)
-* **`ref_mouthpieces`**
+* **`ref_mouthpieces`** (RLS Enabled, Public Read)
     * `id` (UUID, PK)
     * `manufacturer` (String)
     * `model` (String)
     * `variant` (String, nullable)
     * `material` (Enum: HR, Metal, Plastic, Wood)
-    * `baffle_type` (Enum: Straight, Rollover, Step, Concave)
+    * `baffle_type` (Enum: Straight, Rollover, Step, Concave, High, Low)
     * `chamber_size` (Enum: Small, Medium, Medium-Large, Large)
     * `manufacturing_method` (Enum: CNC, Hand-finished, Cast)
+    * `data_source` (String, nullable)
 
-* **`ref_tip_openings`**
+* **`ref_tip_openings`** (RLS Enabled, Public Read)
     * `id` (UUID, PK)
     * `mouthpiece_id` (FK -> ref_mouthpieces)
     * `label` (String) - e.g., "7", "C*", "6"
     * `opening_inch` (Decimal) - e.g., 0.105 (note: convert to mm in UI)
     * `facing_length` (Enum: Short, Medium, Long)
+    * `instrument` (Enum: Sopranino...Contrabass)
+    * `data_source` (String, nullable)
 
-* **`ref_reeds`**
+* **`ref_reeds`** (RLS Enabled, Public Read)
     * `id` (UUID, PK)
     * `manufacturer` (String)
     * `model` (String) - e.g., "Java Green"
     * `cut` (Enum: Filed, Unfiled)
     * `material` (Enum: Cane, Synthetic, Coated)
     * `strength_label` (String) - e.g., "2.5", "Medium", "3H"
+    * `data_source` (String, nullable)
 
 ### B. Submission Tables (User Data)
-* **`player_submissions`**
+* **`player_submissions`** (RLS Enabled, Public Read/Insert)
     * `id` (UUID, PK)
     * `timestamp` (DateTime)
-    * `player_id` (String/Hash) - Anonymous identifier for spam prevention. Should identify the same user over time, but also not be personally identifying
-    * **Setup Context:**
-        * `instrument` (Enum: Sopranino, Soprano, Alto, Tenor, Baritone, Bass, Contrabass)
-        * `genre` (Enum: Jazz, Classical, Pop, Funk...)
-        * `sub_genre` (Enum: Jazz: Bebop, Hot/New Orleans, Swing-Era, Straight-ahead, Big Band, Contemporary, Fusion, Latin...)
-        * `skill_level` (Enum: Beginner, Intermediate, Enthusiast, Semi-Pro, Pro)
-        * `player_hours` (Enum: Low (<3 hours/week), Medium (>6 hours/week), High (>10 hours/week), Very High (>20 hours/week)
-    * **Gear Links:**
-        * `mouthpiece_id` (FK -> ref_mouthpieces)
-        * `tip_opening_id` (FK -> ref_tip_openings)
-        * `reed_id` (FK -> ref_reeds)
-    * **Subjective Results:**
-        * `suitability_rating` (1-5 Integer) - "How well does this work for you?"
-        * `resistance_feel` (-5 to +5 Integer) - Free-blowing vs. Resistant
-        * `brightness_feel` (-5 to +5 Integer) - Dark vs. Bright
-        * `min_dynamic` (1-8 Int) - Softest comfortable volume.
-        * *Mapping:* 1=ppp, 2=pp, 3=p, 4=mp, 5=mf, 6=f, 7=ff, 8=fff.
-        * `max_dynamic` (1-8 Int) - Loudest comfortable volume.
-        * *Constraint:* Must be >= `min_dynamic`.
-        * `strength_rating` (-5 to +5 Integer) - Too Soft vs Too Hard
-        * `modifications` (Boolean) - "Do you modify your reeds?"
-        * `modification_details` (Text) - "How do you modify your reeds? (clip, sand, etc). (note: only show this if `modifications` is true)
-        * `comments` (Text)
+    * `player_id` (String/Hash) - Anonymous identifier for spam prevention.
+    
+    **Setup Context:**
+    * `instrument` (Enum: Sopranino...Contrabass)
+    * `genre` (Enum: Jazz, Classical, Pop, Funk, Other)
+    * `sub_genre` (String, nullable)
+    * `skill_level` (Enum: Beginner, Intermediate, Enthusiast, Semi-Pro, Pro)
+    * `player_hours` (Enum: Low, Medium, High, Very High)
+    
+    **Gear Links:**
+    * `mouthpiece_id` (FK -> ref_mouthpieces)
+    * `tip_opening_id` (FK -> ref_tip_openings)
+    * `reed_id` (FK -> ref_reeds)
+    
+    **"Not Listed" Support:**
+    * `mouthpiece_man_details` (Text, nullable) - Manual entry if MP not found.
+    * `reed_man_details` (Text, nullable) - Manual entry if Reed not found.
+
+    **Subjective Results:**
+    * `suitability_rating` (1-5 Integer) - "How well does this work for you?"
+    * `resistance_feel` (-5 to +5 Integer, Nullable) - Free-blowing vs. Resistant (Optional)
+    * `brightness_feel` (-5 to +5 Integer, Nullable) - Dark vs. Bright (Optional)
+    * `min_dynamic` (1-8 Int, Nullable) - Softest comfortable volume (Optional)
+    * `max_dynamic` (1-8 Int, Nullable) - Loudest comfortable volume (Optional)
+    * `strength_rating` (-5 to +5 Integer) - Too Soft vs Too Hard
+    
+    **Modifications:**
+    * `is_mouthpiece_modified` (Boolean)
+    * `mouthpiece_mod_details` (Text, nullable)
+    * `is_reed_modified` (Boolean)
+    * `reed_mod_details` (Text, nullable)
+    
+    * `comments` (Text)
+
+### C. Views
+* **`view_ref_tip_openings_full`**
+    * `security_invoker=true`
+    * Joins `ref_tip_openings` with `ref_mouthpieces` for easier querying.
 
 ---
 
@@ -92,12 +113,27 @@
 ### Public Routes
 * `GET /api/v1/options/mouthpieces` - Returns list for dropdowns.
 * `GET /api/v1/options/reeds` - Returns list for dropdowns.
-* `GET /api/v1/stats/correlation` - Returns JSON for scatter plots (Tip Opening X vs Reed Strength Y).
+* `GET /api/v1/stats/correlation` - Returns JSON for scatter plots.
 * `POST /api/v1/survey/submit` - Validates and inserts a new `player_submission`.
+* `GET /submissions/mouthpiece/{mouthpiece_id}` - Returns submissions for similarity scoring.
 
-### Recommender Routes
-* `POST /api/v1/recommend/reed`
-    * **Input:** `{mouthpiece_id, tip_opening, current_reed_strength, problem ("too_soft", "too_hard"), genre}`
+---
+
+## 5. Frontend Features
+
+### Survey Wizard (`SurveyWizard.tsx`)
+*   **Step 1:** Player Context (Skill, Hours).
+*   **Step 2:** Mouthpiece Selection (Instrument, Genre, Mfg, Model, Tip).
+    *   *Smart Filtering:* Tip openings filtered by selected Instrument.
+    *   *"Not Listed":* Allows manual text entry for unknown gear.
+*   **Step 3:** Reed Selection (Mfg, Model, Strength).
+    *   *Sorting:* Numeric sort for strengths (2.0 < 2.5 < 3.0).
+*   **Step 4:** Evaluation (Ratings, Modifications).
+    *   *Optional Fields:* Resistance, Brightness, Dynamics.
+
+### Components
+*   **`HelpPopover`**: Contextual help that closes on global click.
+*   **`ErrorMsg`**: Standardized form validation error display.
     * **Logic:** Finds similar players in DB. Filters by success rating > 4. Adjusts strength based on "problem" input.
     * **Output:** JSON list of recommended reeds with confidence scores.
 

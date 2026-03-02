@@ -24,6 +24,9 @@ class MfgMethod(str, enum.Enum):
     CNC = "CNC"
     HAND_FINISHED = "Hand-finished"
     CAST = "Cast"
+    PRINTED = "3D_PRINTED"
+    HAND_MADE = "HAND_MADE"
+    VINTAGE = "VINTAGE"
 
 class FacingLength(str, enum.Enum):
     SHORT = "Short"

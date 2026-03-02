@@ -80,3 +80,63 @@ class PlayerSubmissionOut(PlayerSubmissionCreate):
     id: UUID
     timestamp: datetime
     model_config = ConfigDict(from_attributes=True)
+
+class ExplorationDataPoint(BaseModel):
+    # Setup Info
+    mouthpiece_manufacturer: str
+    mouthpiece_model: str
+    tip_label: Optional[str] = None
+    tip_opening_inch: float
+    baffle_type: BaffleType
+    chamber_size: ChamberSize
+    facing_length: FacingLength
+    reed_manufacturer: str
+    reed_model: str
+    reed_strength: str
+    
+    # Aggregated Stats
+    avg_suitability: float
+    avg_resistance: float
+    avg_brightness: float
+    avg_min_dynamic: float
+    avg_max_dynamic: float
+    avg_strength_rating: float
+    
+    submission_count: int
+
+    model_config = ConfigDict(from_attributes=True)
+
+class ScatterDataPoint(BaseModel):
+    # Setup IDs
+    mouthpiece_id: UUID
+    tip_opening_id: UUID
+    reed_id: UUID
+
+    # Mouthpiece Details
+    mouthpiece_manufacturer: str
+    mouthpiece_model: str
+    mouthpiece_material: MaterialType
+    baffle_type: BaffleType
+    chamber_size: ChamberSize
+
+    # Tip Details
+    tip_label: Optional[str] = None
+    tip_opening_inch: float
+    facing_length: FacingLength
+
+    # Reed Details 
+    reed_manufacturer: str
+    reed_model: str
+    reed_strength: str
+    reed_cut: CutType
+    reed_material: ReedMaterial
+
+    # Aggregates
+    submission_count: int
+    avg_suitability: float
+    avg_resistance: Optional[float] = None
+    avg_brightness: Optional[float] = None
+    avg_min_dynamic: Optional[float] = None
+    avg_max_dynamic: Optional[float] = None
+    
+    model_config = ConfigDict(from_attributes=True)

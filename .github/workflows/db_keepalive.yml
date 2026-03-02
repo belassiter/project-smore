@@ -1,0 +1,48 @@
+name: Database Health Check
+
+on:
+  schedule:
+    # Run once a week on Sunday at 00:00 UTC
+    - cron: '0 0 * * 0'
+  workflow_dispatch:
+
+jobs:
+  health-check:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install sqlalchemy psycopg2-binary
+          
+      - name: Ping Database
+        env:
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+        run: |
+          python -c "
+          import os
+          from sqlalchemy import create_engine, text
+          
+          db_url = os.environ.get('DATABASE_URL')
+          if not db_url:
+              print('DATABASE_URL not set')
+              exit(1)
+              
+          try:
+              engine = create_engine(db_url)
+              with engine.connect() as connection:
+                  result = connection.execute(text('SELECT 1'))
+                  print(f'Database ping successful: {result.scalar()}')
+          except Exception as e:
+              print(f'Database ping failed: {e}')
+              exit(1)
+          "

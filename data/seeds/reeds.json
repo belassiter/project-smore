@@ -1,0 +1,2072 @@
+[
+  {
+    "id": "c0611108-b7e0-4543-8e8b-12cc77319045",
+    "manufacturer": "Vandoren",
+    "model": "Traditional (Blue Box)",
+    "cut": "Filed",
+    "material": "Cane",
+    "strength_label": "1.5",
+    "data_source": "https://vandoren.fr/en/saxophone-reeds/"
+  },
+  {
+    "id": "a3a71d25-24b6-4a3b-8aae-61f3ec9fdabc",
+    "manufacturer": "Vandoren",
+    "model": "Traditional (Blue Box)",
+    "cut": "Filed",
+    "material": "Cane",
+    "strength_label": "2",
+    "data_source": "https://vandoren.fr/en/saxophone-reeds/"
+  },
+  {
+    "id": "5e127334-776c-4bff-95eb-b8e47667f726",
+    "manufacturer": "Vandoren",
+    "model": "Traditional (Blue Box)",
+    "cut": "Filed",
+    "material": "Cane",
+    "strength_label": "2.5",
+    "data_source": "https://vandoren.fr/en/saxophone-reeds/"
+  },
+  {
+    "id": "7890489d-8a99-4191-b741-5d86f932f719",
+    "manufacturer": "Vandoren",
+    "model": "Traditional (Blue Box)",
+    "cut": "Filed",
+    "material": "Cane",
+    "strength_label": "3",
+    "data_source": "https://vandoren.fr/en/saxophone-reeds/"
+  },
+  {
+    "id": "34948089-c448-4977-8cc9-595030bd346b",
+    "manufacturer": "Vandoren",
+    "model": "Traditional (Blue Box)",
+    "cut": "Filed",
+    "material": "Cane",
+    "strength_label": "3.5",
+    "data_source": "https://vandoren.fr/en/saxophone-reeds/"
+  },
+  {
+    "id": "5c13681a-1076-4e3c-bc15-95f5119a0eb3",
+    "manufacturer": "Vandoren",
+    "model": "Traditional (Blue Box)",
+    "cut": "Filed",
+    "material": "Cane",
+    "strength_label": "4",
+    "data_source": "https://vandoren.fr/en/saxophone-reeds/"
+  },
+  {
+    "id": "9c1b4241-dd2d-4fb1-a350-57d75eb53803",
+    "manufacturer": "Vandoren",
+    "model": "Java Green",
+    "cut": "Unfiled",
+    "material": "Cane",
+    "strength_label": "1.5",
+    "data_source": "https://vandoren.fr/en/saxophone-reeds/"
+  },
+  {
+    "id": "c9f87266-9619-43f4-baf6-d379de3c7ccd",
+    "manufacturer": "Vandoren",
+    "model": "Java Green",
+    "cut": "Unfiled",
+    "material": "Cane",
+    "strength_label": "2",
+    "data_source": "https://vandoren.fr/en/saxophone-reeds/"
+  },
+  {
+    "id": "5ae441aa-ef97-42cd-867e-3f7b9fe72c69",
+    "manufacturer": "Vandoren",
+    "model": "Java Green",
+    "cut": "Unfiled",
+    "material": "Cane",
+    "strength_label": "2.5",
+    "data_source": "https://vandoren.fr/en/saxophone-reeds/"
+  },
+  {
+    "id": "d7d3470f-188c-46ab-8621-ac64f96f68bf",
+    "manufacturer": "Vandoren",
+    "model": "Java Green",
+    "cut": "Unfiled",
+    "material": "Cane",
+    "strength_label": "3",
+    "data_source": "https://vandoren.fr/en/saxophone-reeds/"
+  },
+  {
+    "id": "e743b110-7004-4402-8909-d6595d972dfb",
+    "manufacturer": "Vandoren",
+    "model": "Java Green",
+    "cut": "Unfiled",
+    "material": "Cane",
+    "strength_label": "3.5",
+    "data_source": "https://vandoren.fr/en/saxophone-reeds/"
+  },
+  {
+    "id": "0cc448ea-40ec-45b1-899a-5c3254144b4b",
+    "manufacturer": "Vandoren",
+    "model": "Java Green",
+    "cut": "Unfiled",
+    "material": "Cane",
+    "strength_label": "4",
+    "data_source": "https://vandoren.fr/en/saxophone-reeds/"
+  },
+  {
+    "id": "d693fdc1-1ad8-4183-b04f-67b48747cf89",
+    "manufacturer": "D'Addario",
+    "model": "Select Jazz Unfiled",
+    "cut": "Unfiled",
+    "material": "Cane",
+    "strength_label": "2S",
+    "data_source": "https://daddario.com/products/woodwinds/alto-saxophone/"
+  },
+  {
+    "id": "23c3b511-d531-45f0-b558-80f02ad5f64f",
+    "manufacturer": "D'Addario",
+    "model": "Select Jazz Unfiled",
+    "cut": "Unfiled",
+    "material": "Cane",
+    "strength_label": "2M",
+    "data_source": "https://daddario.com/products/woodwinds/alto-saxophone/"
+  },
+  {
+    "id": "02c4c912-65d0-45be-9ae5-be39ee587447",
+    "manufacturer": "D'Addario",
+    "model": "Select Jazz Unfiled",
+    "cut": "Unfiled",
+    "material": "Cane",
+    "strength_label": "2H",
+    "data_source": "https://daddario.com/products/woodwinds/alto-saxophone/"
+  },
+  {
+    "id": "24a2486a-604b-439f-af8d-fd5ba0f370e0",
+    "manufacturer": "D'Addario",
+    "model": "Select Jazz Unfiled",
+    "cut": "Unfiled",
+    "material": "Cane",
+    "strength_label": "3S",
+    "data_source": "https://daddario.com/products/woodwinds/alto-saxophone/"
+  },
+  {
+    "id": "3ae8be67-e372-4df2-a08a-ea826ec589db",
+    "manufacturer": "D'Addario",
+    "model": "Select Jazz Unfiled",
+    "cut": "Unfiled",
+    "material": "Cane",
+    "strength_label": "3M",
+    "data_source": "https://daddario.com/products/woodwinds/alto-saxophone/"
+  },
+  {
+    "id": "7e7b505a-a945-4990-b1cf-f338bb27280e",
+    "manufacturer": "D'Addario",
+    "model": "Select Jazz Unfiled",
+    "cut": "Unfiled",
+    "material": "Cane",
+    "strength_label": "3H",
+    "data_source": "https://daddario.com/products/woodwinds/alto-saxophone/"
+  },
+  {
+    "id": "88d68a76-7632-4e42-96ae-ef4c77dfa281",
+    "manufacturer": "Legere",
+    "model": "Signature",
+    "cut": "Unfiled",
+    "material": "Synthetic",
+    "strength_label": "2.00",
+    "data_source": "https://legere.com/products/saxophone-reeds/"
+  },
+  {
+    "id": "4b1c1867-c3a8-4c6a-b013-9b9453c76dc7",
+    "manufacturer": "Legere",
+    "model": "Signature",
+    "cut": "Unfiled",
+    "material": "Synthetic",
+    "strength_label": "2.25",
+    "data_source": "https://legere.com/products/saxophone-reeds/"
+  },
+  {
+    "id": "1eeeae1c-2c8a-4246-a0ce-2a11d325fd81",
+    "manufacturer": "Legere",
+    "model": "Signature",
+    "cut": "Unfiled",
+    "material": "Synthetic",
+    "strength_label": "2.50",
+    "data_source": "https://legere.com/products/saxophone-reeds/"
+  },
+  {
+    "id": "4314cdc6-0476-408a-ae7a-5d48bd605ac3",
+    "manufacturer": "Legere",
+    "model": "Signature",
+    "cut": "Unfiled",
+    "material": "Synthetic",
+    "strength_label": "2.75",
+    "data_source": "https://legere.com/products/saxophone-reeds/"
+  },
+  {
+    "id": "924b06b6-2b83-4f22-9376-d4d54cecf48e",
+    "manufacturer": "Legere",
+    "model": "Signature",
+    "cut": "Unfiled",
+    "material": "Synthetic",
+    "strength_label": "3.00",
+    "data_source": "https://legere.com/products/saxophone-reeds/"
+  },
+  {
+    "id": "f4b0206f-be35-458b-a39e-08824af9ce3c",
+    "manufacturer": "Legere",
+    "model": "Signature",
+    "cut": "Unfiled",
+    "material": "Synthetic",
+    "strength_label": "3.25",
+    "data_source": "https://legere.com/products/saxophone-reeds/"
+  },
+  {
+    "id": "5b5b4b71-1e68-459e-a19e-45ca01d4eb72",
+    "manufacturer": "D'Addario",
+    "model": "Select Jazz Unfiled",
+    "cut": "Unfiled",
+    "material": "Cane",
+    "strength_label": "4H",
+    "data_source": "https://daddario.com/products/woodwinds/alto-saxophone/"
+  },
+  {
+    "id": "f97334c4-87d8-4d07-a228-03bde69ab899",
+    "manufacturer": "D'Addario",
+    "model": "Select Jazz Unfiled",
+    "cut": "Unfiled",
+    "material": "Cane",
+    "strength_label": "4M",
+    "data_source": "https://daddario.com/products/woodwinds/alto-saxophone/"
+  },
+  {
+    "id": "760606b1-0bef-46ce-930b-b6ad46b19f96",
+    "manufacturer": "D'Addario",
+    "model": "Select Jazz Unfiled",
+    "cut": "Unfiled",
+    "material": "Cane",
+    "strength_label": "4S",
+    "data_source": "https://daddario.com/products/woodwinds/alto-saxophone/"
+  },
+  {
+    "id": "da5abe1d-2c41-4ce5-aac9-93f92198a7e0",
+    "manufacturer": "D'Addario",
+    "model": "Select Jazz Filed",
+    "cut": "Filed",
+    "material": "Cane",
+    "strength_label": "2H",
+    "data_source": "https://daddario.com/products/woodwinds/alto-saxophone/"
+  },
+  {
+    "id": "e2c17229-d054-4b34-8997-6caf528aa18d",
+    "manufacturer": "D'Addario",
+    "model": "Select Jazz Filed",
+    "cut": "Filed",
+    "material": "Cane",
+    "strength_label": "2M",
+    "data_source": "https://daddario.com/products/woodwinds/alto-saxophone/"
+  },
+  {
+    "id": "09a96269-e918-4ad4-9982-33adb2f64c2c",
+    "manufacturer": "D'Addario",
+    "model": "Select Jazz Filed",
+    "cut": "Filed",
+    "material": "Cane",
+    "strength_label": "2S",
+    "data_source": "https://daddario.com/products/woodwinds/alto-saxophone/"
+  },
+  {
+    "id": "5114b948-265d-4f04-a781-d03047954b64",
+    "manufacturer": "D'Addario",
+    "model": "Select Jazz Filed",
+    "cut": "Filed",
+    "material": "Cane",
+    "strength_label": "3H",
+    "data_source": "https://daddario.com/products/woodwinds/alto-saxophone/"
+  },
+  {
+    "id": "831053e0-7449-49a2-b3bb-14fb80711099",
+    "manufacturer": "D'Addario",
+    "model": "Select Jazz Filed",
+    "cut": "Filed",
+    "material": "Cane",
+    "strength_label": "3M",
+    "data_source": "https://daddario.com/products/woodwinds/alto-saxophone/"
+  },
+  {
+    "id": "9f5fce08-568c-4449-93aa-de516495c7cd",
+    "manufacturer": "D'Addario",
+    "model": "Select Jazz Filed",
+    "cut": "Filed",
+    "material": "Cane",
+    "strength_label": "3S",
+    "data_source": "https://daddario.com/products/woodwinds/alto-saxophone/"
+  },
+  {
+    "id": "c223b710-b9ce-42cd-8d5a-cc3d0cb5e5cc",
+    "manufacturer": "D'Addario",
+    "model": "Select Jazz Filed",
+    "cut": "Filed",
+    "material": "Cane",
+    "strength_label": "4H",
+    "data_source": "https://daddario.com/products/woodwinds/alto-saxophone/"
+  },
+  {
+    "id": "fdb9fc35-661a-4a10-82b5-891ea17c4886",
+    "manufacturer": "D'Addario",
+    "model": "Select Jazz Filed",
+    "cut": "Filed",
+    "material": "Cane",
+    "strength_label": "4M",
+    "data_source": "https://daddario.com/products/woodwinds/alto-saxophone/"
+  },
+  {
+    "id": "c21dd027-39bd-4d0b-9576-51dcaebdbc75",
+    "manufacturer": "D'Addario",
+    "model": "Select Jazz Filed",
+    "cut": "Filed",
+    "material": "Cane",
+    "strength_label": "4S",
+    "data_source": "https://daddario.com/products/woodwinds/alto-saxophone/"
+  },
+  {
+    "id": "cb191647-644e-400d-990b-c09543da10b7",
+    "manufacturer": "D'Addario",
+    "model": "Reserve",
+    "cut": "Filed",
+    "material": "Cane",
+    "strength_label": "2.0",
+    "data_source": "https://www.daddario.com/products/woodwinds/alto-saxophone/alto-sax-reeds/organic-reserve-alto-saxophone-reeds/item/daddario-organic-reserve-alto-saxophone-reeds-strength-3.05-10-pack-10673/"
+  },
+  {
+    "id": "2c61741c-3de9-4e13-a70f-32260ddb016b",
+    "manufacturer": "D'Addario",
+    "model": "Reserve",
+    "cut": "Filed",
+    "material": "Cane",
+    "strength_label": "2.5",
+    "data_source": "https://www.daddario.com/products/woodwinds/alto-saxophone/alto-sax-reeds/organic-reserve-alto-saxophone-reeds/item/daddario-organic-reserve-alto-saxophone-reeds-strength-3.05-10-pack-10673/"
+  },
+  {
+    "id": "d2e7879b-7c8e-4cc6-aee0-82d5e3575411",
+    "manufacturer": "D'Addario",
+    "model": "Reserve",
+    "cut": "Filed",
+    "material": "Cane",
+    "strength_label": "3.0",
+    "data_source": "https://www.daddario.com/products/woodwinds/alto-saxophone/alto-sax-reeds/organic-reserve-alto-saxophone-reeds/item/daddario-organic-reserve-alto-saxophone-reeds-strength-3.05-10-pack-10673/"
+  },
+  {
+    "id": "40d6812a-5bb6-457b-a2b5-192a439e1a6d",
+    "manufacturer": "D'Addario",
+    "model": "Reserve",
+    "cut": "Filed",
+    "material": "Cane",
+    "strength_label": "3.0+",
+    "data_source": "https://www.daddario.com/products/woodwinds/alto-saxophone/alto-sax-reeds/organic-reserve-alto-saxophone-reeds/item/daddario-organic-reserve-alto-saxophone-reeds-strength-3.05-10-pack-10673/"
+  },
+  {
+    "id": "5172f961-4d69-4946-833f-eb09b04d47e9",
+    "manufacturer": "D'Addario",
+    "model": "Reserve",
+    "cut": "Filed",
+    "material": "Cane",
+    "strength_label": "3.5",
+    "data_source": "https://www.daddario.com/products/woodwinds/alto-saxophone/alto-sax-reeds/organic-reserve-alto-saxophone-reeds/item/daddario-organic-reserve-alto-saxophone-reeds-strength-3.05-10-pack-10673/"
+  },
+  {
+    "id": "99b89a13-b5f1-46b7-a48b-28f6f0ab47e1",
+    "manufacturer": "D'Addario",
+    "model": "Reserve",
+    "cut": "Filed",
+    "material": "Cane",
+    "strength_label": "4.0",
+    "data_source": "https://www.daddario.com/products/woodwinds/alto-saxophone/alto-sax-reeds/organic-reserve-alto-saxophone-reeds/item/daddario-organic-reserve-alto-saxophone-reeds-strength-3.05-10-pack-10673/"
+  },
+  {
+    "id": "6c2e2e1d-d869-4135-99e9-940fa05b18a7",
+    "manufacturer": "D'Addario",
+    "model": "Reserve",
+    "cut": "Filed",
+    "material": "Cane",
+    "strength_label": "4.5",
+    "data_source": "https://www.daddario.com/products/woodwinds/alto-saxophone/alto-sax-reeds/organic-reserve-alto-saxophone-reeds/item/daddario-organic-reserve-alto-saxophone-reeds-strength-3.05-10-pack-10673/"
+  },
+  {
+    "id": "b6344ac0-9a87-456d-804e-1d622f3771c4",
+    "manufacturer": "D'Addario",
+    "model": "Rico (Orange Box)",
+    "cut": "Unfiled",
+    "material": "Cane",
+    "strength_label": "1.5",
+    "data_source": "https://www.daddario.com/products/woodwinds/saxophone-reeds/rico-saxophone-reeds/rico-by-daddario-alto-saxophone-reeds/item/rico-by-daddario-alto-sax-reeds-strength-2-10-pack-3967/"
+  },
+  {
+    "id": "e8cb8db4-6984-4c14-a38a-275986c54783",
+    "manufacturer": "D'Addario",
+    "model": "Rico (Orange Box)",
+    "cut": "Unfiled",
+    "material": "Cane",
+    "strength_label": "2.0",
+    "data_source": "https://www.daddario.com/products/woodwinds/saxophone-reeds/rico-saxophone-reeds/rico-by-daddario-alto-saxophone-reeds/item/rico-by-daddario-alto-sax-reeds-strength-2-10-pack-3967/"
+  },
+  {
+    "id": "250e1821-c618-4f28-a22d-ce75800f259d",
+    "manufacturer": "D'Addario",
+    "model": "Rico (Orange Box)",
+    "cut": "Unfiled",
+    "material": "Cane",
+    "strength_label": "2.5",
+    "data_source": "https://www.daddario.com/products/woodwinds/saxophone-reeds/rico-saxophone-reeds/rico-by-daddario-alto-saxophone-reeds/item/rico-by-daddario-alto-sax-reeds-strength-2-10-pack-3967/"
+  },
+  {
+    "id": "2acdaa37-6e4b-4d58-8767-197261c9fb06",
+    "manufacturer": "D'Addario",
+    "model": "Rico (Orange Box)",
+    "cut": "Unfiled",
+    "material": "Cane",
+    "strength_label": "3.0",
+    "data_source": "https://www.daddario.com/products/woodwinds/saxophone-reeds/rico-saxophone-reeds/rico-by-daddario-alto-saxophone-reeds/item/rico-by-daddario-alto-sax-reeds-strength-2-10-pack-3967/"
+  },
+  {
+    "id": "ac01b15d-a6be-4c4b-9e78-17c17db20761",
+    "manufacturer": "D'Addario",
+    "model": "Rico (Orange Box)",
+    "cut": "Unfiled",
+    "material": "Cane",
+    "strength_label": "3.5",
+    "data_source": "https://www.daddario.com/products/woodwinds/saxophone-reeds/rico-saxophone-reeds/rico-by-daddario-alto-saxophone-reeds/item/rico-by-daddario-alto-sax-reeds-strength-2-10-pack-3967/"
+  },
+  {
+    "id": "020c78f9-9643-4b92-9bbb-01a50bf22564",
+    "manufacturer": "D'Addario",
+    "model": "Rico (Orange Box)",
+    "cut": "Unfiled",
+    "material": "Cane",
+    "strength_label": "4.0",
+    "data_source": "https://www.daddario.com/products/woodwinds/saxophone-reeds/rico-saxophone-reeds/rico-by-daddario-alto-saxophone-reeds/item/rico-by-daddario-alto-sax-reeds-strength-2-10-pack-3967/"
+  },
+  {
+    "id": "6d4f8453-c48f-48de-91cf-b0b6c4755f61",
+    "manufacturer": "D'Addario",
+    "model": "Royal La Voz",
+    "cut": "Unfiled",
+    "material": "Cane",
+    "strength_label": "S",
+    "data_source": "https://www.daddario.com/products/woodwinds/alto-saxophone/alto-sax-reeds/la-voz-alto-saxophone-reeds/item/la-voz-alto-sax-reeds-strength-medium-10-pack-6264/"
+  },
+  {
+    "id": "43b25e17-e2f8-4122-bbc0-010cd2da2be5",
+    "manufacturer": "D'Addario",
+    "model": "Royal La Voz",
+    "cut": "Unfiled",
+    "material": "Cane",
+    "strength_label": "MS",
+    "data_source": "https://www.daddario.com/products/woodwinds/alto-saxophone/alto-sax-reeds/la-voz-alto-saxophone-reeds/item/la-voz-alto-sax-reeds-strength-medium-10-pack-6264/"
+  },
+  {
+    "id": "a3a5d687-3980-47bf-bd2a-025f3beba0dd",
+    "manufacturer": "D'Addario",
+    "model": "Royal La Voz",
+    "cut": "Unfiled",
+    "material": "Cane",
+    "strength_label": "MS",
+    "data_source": "https://www.daddario.com/products/woodwinds/alto-saxophone/alto-sax-reeds/la-voz-alto-saxophone-reeds/item/la-voz-alto-sax-reeds-strength-medium-10-pack-6264/"
+  },
+  {
+    "id": "43b28c51-bb54-403b-88e1-c6bb302f6799",
+    "manufacturer": "D'Addario",
+    "model": "Royal La Voz",
+    "cut": "Unfiled",
+    "material": "Cane",
+    "strength_label": "MH",
+    "data_source": "https://www.daddario.com/products/woodwinds/alto-saxophone/alto-sax-reeds/la-voz-alto-saxophone-reeds/item/la-voz-alto-sax-reeds-strength-medium-10-pack-6264/"
+  },
+  {
+    "id": "52c91eb1-2c4f-4f69-b095-b55abb4d7438",
+    "manufacturer": "D'Addario",
+    "model": "Royal La Voz",
+    "cut": "Unfiled",
+    "material": "Cane",
+    "strength_label": "H",
+    "data_source": "https://www.daddario.com/products/woodwinds/alto-saxophone/alto-sax-reeds/la-voz-alto-saxophone-reeds/item/la-voz-alto-sax-reeds-strength-medium-10-pack-6264/"
+  },
+  {
+    "id": "e219a5be-b2e1-427a-acc2-476b62b625a5",
+    "manufacturer": "D'Addario",
+    "model": "Plasticover",
+    "cut": "Filed",
+    "material": "Coated",
+    "strength_label": "1.5",
+    "data_source": "https://www.daddario.com/products/woodwinds/alto-saxophone/alto-sax-reeds/plasticover-by-daddario-alto-saxophone-reeds/item/plasticover-by-daddario-alto-sax-reeds-strength-2.5-5-pack-4847/"
+  },
+  {
+    "id": "fdbd7acf-1af1-4be7-bc25-b2f64265861f",
+    "manufacturer": "D'Addario",
+    "model": "Plasticover",
+    "cut": "Filed",
+    "material": "Coated",
+    "strength_label": "2.0",
+    "data_source": "https://www.daddario.com/products/woodwinds/alto-saxophone/alto-sax-reeds/plasticover-by-daddario-alto-saxophone-reeds/item/plasticover-by-daddario-alto-sax-reeds-strength-2.5-5-pack-4847/"
+  },
+  {
+    "id": "fd15b821-7053-4dde-a897-cb1bf80df5b9",
+    "manufacturer": "D'Addario",
+    "model": "Plasticover",
+    "cut": "Filed",
+    "material": "Coated",
+    "strength_label": "2.5",
+    "data_source": "https://www.daddario.com/products/woodwinds/alto-saxophone/alto-sax-reeds/plasticover-by-daddario-alto-saxophone-reeds/item/plasticover-by-daddario-alto-sax-reeds-strength-2.5-5-pack-4847/"
+  },
+  {
+    "id": "2a5e2cdd-8b9d-440d-89de-107e9b612e4c",
+    "manufacturer": "D'Addario",
+    "model": "Plasticover",
+    "cut": "Filed",
+    "material": "Coated",
+    "strength_label": "3.0",
+    "data_source": "https://www.daddario.com/products/woodwinds/alto-saxophone/alto-sax-reeds/plasticover-by-daddario-alto-saxophone-reeds/item/plasticover-by-daddario-alto-sax-reeds-strength-2.5-5-pack-4847/"
+  },
+  {
+    "id": "a61c06b7-09cd-42ff-96cf-0b4b9c300330",
+    "manufacturer": "D'Addario",
+    "model": "Plasticover",
+    "cut": "Filed",
+    "material": "Coated",
+    "strength_label": "3.5",
+    "data_source": "https://www.daddario.com/products/woodwinds/alto-saxophone/alto-sax-reeds/plasticover-by-daddario-alto-saxophone-reeds/item/plasticover-by-daddario-alto-sax-reeds-strength-2.5-5-pack-4847/"
+  },
+  {
+    "id": "2b063748-c694-4223-82bb-883dff999006",
+    "manufacturer": "D'Addario",
+    "model": "Plasticover",
+    "cut": "Filed",
+    "material": "Coated",
+    "strength_label": "4.0",
+    "data_source": "https://www.daddario.com/products/woodwinds/alto-saxophone/alto-sax-reeds/plasticover-by-daddario-alto-saxophone-reeds/item/plasticover-by-daddario-alto-sax-reeds-strength-2.5-5-pack-4847/"
+  },
+  {
+    "id": "f06c4b1d-d49c-48d4-b3df-a130fce7b9b2",
+    "manufacturer": "D'Addario",
+    "model": "Royal (Rico Royal)",
+    "cut": "Filed",
+    "material": "Cane",
+    "strength_label": "1.0",
+    "data_source": "https://www.daddario.com/products/woodwinds/alto-saxophone/alto-sax-reeds/royal-by-daddario-alto-saxophone-reeds/item/royal-by-daddario-alto-sax-reeds-strength-2-10-pack-4857/"
+  },
+  {
+    "id": "c54f4a2c-6424-4563-875c-bb1f04eab5ee",
+    "manufacturer": "D'Addario",
+    "model": "Royal (Rico Royal)",
+    "cut": "Filed",
+    "material": "Cane",
+    "strength_label": "1.5",
+    "data_source": "https://www.daddario.com/products/woodwinds/alto-saxophone/alto-sax-reeds/royal-by-daddario-alto-saxophone-reeds/item/royal-by-daddario-alto-sax-reeds-strength-2-10-pack-4857/"
+  },
+  {
+    "id": "c90a0730-e73b-4586-9bcf-46a2ccde5f88",
+    "manufacturer": "D'Addario",
+    "model": "Royal (Rico Royal)",
+    "cut": "Filed",
+    "material": "Cane",
+    "strength_label": "2.0",
+    "data_source": "https://www.daddario.com/products/woodwinds/alto-saxophone/alto-sax-reeds/royal-by-daddario-alto-saxophone-reeds/item/royal-by-daddario-alto-sax-reeds-strength-2-10-pack-4857/"
+  },
+  {
+    "id": "c917a5a1-ffc5-410f-b22f-a06c84eec068",
+    "manufacturer": "D'Addario",
+    "model": "Royal (Rico Royal)",
+    "cut": "Filed",
+    "material": "Cane",
+    "strength_label": "2.5",
+    "data_source": "https://www.daddario.com/products/woodwinds/alto-saxophone/alto-sax-reeds/royal-by-daddario-alto-saxophone-reeds/item/royal-by-daddario-alto-sax-reeds-strength-2-10-pack-4857/"
+  },
+  {
+    "id": "eb580940-f930-4fee-aa0e-208acb82d17e",
+    "manufacturer": "D'Addario",
+    "model": "Royal (Rico Royal)",
+    "cut": "Filed",
+    "material": "Cane",
+    "strength_label": "3.0",
+    "data_source": "https://www.daddario.com/products/woodwinds/alto-saxophone/alto-sax-reeds/royal-by-daddario-alto-saxophone-reeds/item/royal-by-daddario-alto-sax-reeds-strength-2-10-pack-4857/"
+  },
+  {
+    "id": "57f07295-fabf-4324-afbd-76caffced740",
+    "manufacturer": "D'Addario",
+    "model": "Royal (Rico Royal)",
+    "cut": "Filed",
+    "material": "Cane",
+    "strength_label": "3.5",
+    "data_source": "https://www.daddario.com/products/woodwinds/alto-saxophone/alto-sax-reeds/royal-by-daddario-alto-saxophone-reeds/item/royal-by-daddario-alto-sax-reeds-strength-2-10-pack-4857/"
+  },
+  {
+    "id": "3f26b292-b8d7-4eec-93f9-eb8cb74db669",
+    "manufacturer": "D'Addario",
+    "model": "Royal (Rico Royal)",
+    "cut": "Filed",
+    "material": "Cane",
+    "strength_label": "4.0",
+    "data_source": "https://www.daddario.com/products/woodwinds/alto-saxophone/alto-sax-reeds/royal-by-daddario-alto-saxophone-reeds/item/royal-by-daddario-alto-sax-reeds-strength-2-10-pack-4857/"
+  },
+  {
+    "id": "f3c11da4-7379-48b5-89bf-d68fa595f582",
+    "manufacturer": "D'Addario",
+    "model": "Royal (Rico Royal)",
+    "cut": "Filed",
+    "material": "Cane",
+    "strength_label": "5.0",
+    "data_source": "https://www.daddario.com/products/woodwinds/alto-saxophone/alto-sax-reeds/royal-by-daddario-alto-saxophone-reeds/item/royal-by-daddario-alto-sax-reeds-strength-2-10-pack-4857/"
+  },
+  {
+    "id": "40d134b5-9ef2-4fa5-ab36-ef5787e14b8c",
+    "manufacturer": "D'Addario",
+    "model": "Royal Hemke",
+    "cut": "Filed",
+    "material": "Cane",
+    "strength_label": "2.0",
+    "data_source": "https://www.daddario.com/products/woodwinds/alto-saxophone/alto-sax-reeds/royal-hemke-organic-alto-saxophone-reeds/item/royal-hemke-alto-saxophone-reeds-strength-3-0-10-pack-12004/"
+  },
+  {
+    "id": "dcf8f297-424b-4f3d-8d21-aa02dfff2ab1",
+    "manufacturer": "D'Addario",
+    "model": "Royal Hemke",
+    "cut": "Filed",
+    "material": "Cane",
+    "strength_label": "2.5",
+    "data_source": "https://www.daddario.com/products/woodwinds/alto-saxophone/alto-sax-reeds/royal-hemke-organic-alto-saxophone-reeds/item/royal-hemke-alto-saxophone-reeds-strength-3-0-10-pack-12004/"
+  },
+  {
+    "id": "e0e187ab-6d44-4d0c-8fa9-bed3f16f5a4e",
+    "manufacturer": "D'Addario",
+    "model": "Royal Hemke",
+    "cut": "Filed",
+    "material": "Cane",
+    "strength_label": "3.0",
+    "data_source": "https://www.daddario.com/products/woodwinds/alto-saxophone/alto-sax-reeds/royal-hemke-organic-alto-saxophone-reeds/item/royal-hemke-alto-saxophone-reeds-strength-3-0-10-pack-12004/"
+  },
+  {
+    "id": "672c1ea0-8b0a-4a81-8582-d230cd46367e",
+    "manufacturer": "D'Addario",
+    "model": "Royal Hemke",
+    "cut": "Filed",
+    "material": "Cane",
+    "strength_label": "3.0+",
+    "data_source": "https://www.daddario.com/products/woodwinds/alto-saxophone/alto-sax-reeds/royal-hemke-organic-alto-saxophone-reeds/item/royal-hemke-alto-saxophone-reeds-strength-3-0-10-pack-12004/"
+  },
+  {
+    "id": "844b9b32-b945-4a3a-bc14-0fd76607dc74",
+    "manufacturer": "D'Addario",
+    "model": "Royal Hemke",
+    "cut": "Filed",
+    "material": "Cane",
+    "strength_label": "3.5",
+    "data_source": "https://www.daddario.com/products/woodwinds/alto-saxophone/alto-sax-reeds/royal-hemke-organic-alto-saxophone-reeds/item/royal-hemke-alto-saxophone-reeds-strength-3-0-10-pack-12004/"
+  },
+  {
+    "id": "d9d85954-a504-4f54-88e0-9162315a2320",
+    "manufacturer": "D'Addario",
+    "model": "Royal Hemke",
+    "cut": "Filed",
+    "material": "Cane",
+    "strength_label": "4.0",
+    "data_source": "https://www.daddario.com/products/woodwinds/alto-saxophone/alto-sax-reeds/royal-hemke-organic-alto-saxophone-reeds/item/royal-hemke-alto-saxophone-reeds-strength-3-0-10-pack-12004/"
+  },
+  {
+    "id": "ba5b8bcf-3c99-470f-8339-4ba262c89546",
+    "manufacturer": "D'Addario",
+    "model": "VENN",
+    "cut": "Unfiled",
+    "material": "Synthetic",
+    "strength_label": "2.0",
+    "data_source": "https://www.daddario.com/products/woodwinds/saxophone-reeds/venn-saxophone-reeds/venn-g2-alto-saxophone-reeds/item/daddario-venn-alto-saxophone-reed-g2-strength-3-0-10322/"
+  },
+  {
+    "id": "37c813da-42bc-4a56-8ae0-9216fac201eb",
+    "manufacturer": "D'Addario",
+    "model": "VENN",
+    "cut": "Unfiled",
+    "material": "Synthetic",
+    "strength_label": "2.5",
+    "data_source": "https://www.daddario.com/products/woodwinds/saxophone-reeds/venn-saxophone-reeds/venn-g2-alto-saxophone-reeds/item/daddario-venn-alto-saxophone-reed-g2-strength-3-0-10322/"
+  },
+  {
+    "id": "ea3487f2-00e3-4f07-855e-866034593f19",
+    "manufacturer": "D'Addario",
+    "model": "VENN",
+    "cut": "Unfiled",
+    "material": "Synthetic",
+    "strength_label": "3.0",
+    "data_source": "https://www.daddario.com/products/woodwinds/saxophone-reeds/venn-saxophone-reeds/venn-g2-alto-saxophone-reeds/item/daddario-venn-alto-saxophone-reed-g2-strength-3-0-10322/"
+  },
+  {
+    "id": "a91c8982-2799-4bf4-ab4b-144e0218b489",
+    "manufacturer": "D'Addario",
+    "model": "VENN",
+    "cut": "Unfiled",
+    "material": "Synthetic",
+    "strength_label": "3.0+",
+    "data_source": "https://www.daddario.com/products/woodwinds/saxophone-reeds/venn-saxophone-reeds/venn-g2-alto-saxophone-reeds/item/daddario-venn-alto-saxophone-reed-g2-strength-3-0-10322/"
+  },
+  {
+    "id": "77b40da6-c2aa-4e1a-98e7-756bb3e15a82",
+    "manufacturer": "D'Addario",
+    "model": "VENN",
+    "cut": "Unfiled",
+    "material": "Synthetic",
+    "strength_label": "3.5",
+    "data_source": "https://www.daddario.com/products/woodwinds/saxophone-reeds/venn-saxophone-reeds/venn-g2-alto-saxophone-reeds/item/daddario-venn-alto-saxophone-reed-g2-strength-3-0-10322/"
+  },
+  {
+    "id": "88f107f9-077f-40ed-9aa5-7c1172391205",
+    "manufacturer": "D'Addario",
+    "model": "VENN",
+    "cut": "Unfiled",
+    "material": "Synthetic",
+    "strength_label": "4.0",
+    "data_source": "https://www.daddario.com/products/woodwinds/saxophone-reeds/venn-saxophone-reeds/venn-g2-alto-saxophone-reeds/item/daddario-venn-alto-saxophone-reed-g2-strength-3-0-10322/"
+  },
+  {
+    "id": "10139a49-fb17-4e88-b855-29994ace2348",
+    "manufacturer": "Legere",
+    "model": "Signature",
+    "cut": "Unfiled",
+    "material": "Synthetic",
+    "strength_label": "3.50",
+    "data_source": "https://legere.com/products/saxophone-reeds/"
+  },
+  {
+    "id": "d0c6a7cc-43bf-4c5b-a72d-d644be4cb8d8",
+    "manufacturer": "Legere",
+    "model": "Signature",
+    "cut": "Unfiled",
+    "material": "Synthetic",
+    "strength_label": "3.75",
+    "data_source": "https://legere.com/products/saxophone-reeds/"
+  },
+  {
+    "id": "268685bd-6f26-44b7-bf4f-325739cf02dc",
+    "manufacturer": "Legere",
+    "model": "Signature",
+    "cut": "Unfiled",
+    "material": "Synthetic",
+    "strength_label": "4.00",
+    "data_source": "https://legere.com/products/saxophone-reeds/"
+  },
+  {
+    "id": "f3580823-d566-4164-857f-e0259aa94d38",
+    "manufacturer": "Legere",
+    "model": "American Cut",
+    "cut": "Unfiled",
+    "material": "Synthetic",
+    "strength_label": "1.50",
+    "data_source": "https://legere.com/products/saxophone-reeds/"
+  },
+  {
+    "id": "ffcdb2c1-ea0d-43da-b610-61b99ddd5b5a",
+    "manufacturer": "Legere",
+    "model": "American Cut",
+    "cut": "Unfiled",
+    "material": "Synthetic",
+    "strength_label": "1.75",
+    "data_source": "https://legere.com/products/saxophone-reeds/"
+  },
+  {
+    "id": "7735b126-5591-4e13-8345-d0e10e3002f9",
+    "manufacturer": "Legere",
+    "model": "American Cut",
+    "cut": "Unfiled",
+    "material": "Synthetic",
+    "strength_label": "2.00",
+    "data_source": "https://legere.com/products/saxophone-reeds/"
+  },
+  {
+    "id": "250f32e4-9ee0-463c-8cad-ea452ef7b4fb",
+    "manufacturer": "Legere",
+    "model": "American Cut",
+    "cut": "Unfiled",
+    "material": "Synthetic",
+    "strength_label": "2.25",
+    "data_source": "https://legere.com/products/saxophone-reeds/"
+  },
+  {
+    "id": "db71ba28-5ad5-4832-9f6e-d3df4733c0ec",
+    "manufacturer": "Legere",
+    "model": "American Cut",
+    "cut": "Unfiled",
+    "material": "Synthetic",
+    "strength_label": "2.50",
+    "data_source": "https://legere.com/products/saxophone-reeds/"
+  },
+  {
+    "id": "000461f4-143a-4fe2-b844-c59909d472ab",
+    "manufacturer": "Legere",
+    "model": "American Cut",
+    "cut": "Unfiled",
+    "material": "Synthetic",
+    "strength_label": "2.75",
+    "data_source": "https://legere.com/products/saxophone-reeds/"
+  },
+  {
+    "id": "bca2e828-17d9-43f7-bfa6-d1617a45f26d",
+    "manufacturer": "Legere",
+    "model": "American Cut",
+    "cut": "Unfiled",
+    "material": "Synthetic",
+    "strength_label": "3.00",
+    "data_source": "https://legere.com/products/saxophone-reeds/"
+  },
+  {
+    "id": "9d714b9c-8704-4abc-9dc4-1b84e687a73b",
+    "manufacturer": "Legere",
+    "model": "American Cut",
+    "cut": "Unfiled",
+    "material": "Synthetic",
+    "strength_label": "3.25",
+    "data_source": "https://legere.com/products/saxophone-reeds/"
+  },
+  {
+    "id": "0789f9d8-b72a-4694-9eb0-cf741aecb032",
+    "manufacturer": "Legere",
+    "model": "American Cut",
+    "cut": "Unfiled",
+    "material": "Synthetic",
+    "strength_label": "3.50",
+    "data_source": "https://legere.com/products/saxophone-reeds/"
+  },
+  {
+    "id": "533b59d3-30b0-4a9f-bdef-45c861464f71",
+    "manufacturer": "Legere",
+    "model": "French Cut",
+    "cut": "Unfiled",
+    "material": "Synthetic",
+    "strength_label": "2.00",
+    "data_source": "https://legere.com/products/saxophone-reeds/"
+  },
+  {
+    "id": "8e5b703a-11e6-435d-b163-d19846ce7509",
+    "manufacturer": "Legere",
+    "model": "French Cut",
+    "cut": "Unfiled",
+    "material": "Synthetic",
+    "strength_label": "2.25",
+    "data_source": "https://legere.com/products/saxophone-reeds/"
+  },
+  {
+    "id": "606056d2-4f35-4939-94cc-9b6281ef35e7",
+    "manufacturer": "Legere",
+    "model": "French Cut",
+    "cut": "Unfiled",
+    "material": "Synthetic",
+    "strength_label": "2.50",
+    "data_source": "https://legere.com/products/saxophone-reeds/"
+  },
+  {
+    "id": "c1d68efd-e3bb-4d71-9ab5-fba4ba7e18d5",
+    "manufacturer": "Legere",
+    "model": "French Cut",
+    "cut": "Unfiled",
+    "material": "Synthetic",
+    "strength_label": "2.75",
+    "data_source": "https://legere.com/products/saxophone-reeds/"
+  },
+  {
+    "id": "6cf33b48-0ca1-496f-9df8-944aed002ced",
+    "manufacturer": "Legere",
+    "model": "French Cut",
+    "cut": "Unfiled",
+    "material": "Synthetic",
+    "strength_label": "3.00",
+    "data_source": "https://legere.com/products/saxophone-reeds/"
+  },
+  {
+    "id": "d57f8922-db83-445a-8a31-29d34e48518e",
+    "manufacturer": "Legere",
+    "model": "French Cut",
+    "cut": "Unfiled",
+    "material": "Synthetic",
+    "strength_label": "3.25",
+    "data_source": "https://legere.com/products/saxophone-reeds/"
+  },
+  {
+    "id": "49ead4fe-d820-4ffb-b571-354e96bc5489",
+    "manufacturer": "Legere",
+    "model": "French Cut",
+    "cut": "Unfiled",
+    "material": "Synthetic",
+    "strength_label": "3.50",
+    "data_source": "https://legere.com/products/saxophone-reeds/"
+  },
+  {
+    "id": "fb8ea83d-e562-4077-8087-9843a06bb1f0",
+    "manufacturer": "Legere",
+    "model": "French Cut",
+    "cut": "Unfiled",
+    "material": "Synthetic",
+    "strength_label": "3.75",
+    "data_source": "https://legere.com/products/saxophone-reeds/"
+  },
+  {
+    "id": "4393d0ae-c8f8-4718-b832-8ed459ddcba1",
+    "manufacturer": "Legere",
+    "model": "French Cut",
+    "cut": "Unfiled",
+    "material": "Synthetic",
+    "strength_label": "4.00",
+    "data_source": "https://legere.com/products/saxophone-reeds/"
+  },
+  {
+    "id": "cfb3bead-3c26-4772-8ae2-0c69cc7e7e0e",
+    "manufacturer": "Legere",
+    "model": "Classic",
+    "cut": "Unfiled",
+    "material": "Synthetic",
+    "strength_label": "2.00",
+    "data_source": "https://legere.com/products/saxophone-reeds/"
+  },
+  {
+    "id": "a48e6d82-8a88-48cf-ba13-03c614b2ad83",
+    "manufacturer": "Legere",
+    "model": "Classic",
+    "cut": "Unfiled",
+    "material": "Synthetic",
+    "strength_label": "2.50",
+    "data_source": "https://legere.com/products/saxophone-reeds/"
+  },
+  {
+    "id": "73bce07f-cce3-468f-bceb-8aec361e3002",
+    "manufacturer": "Legere",
+    "model": "Classic",
+    "cut": "Unfiled",
+    "material": "Synthetic",
+    "strength_label": "3.00",
+    "data_source": "https://legere.com/products/saxophone-reeds/"
+  },
+  {
+    "id": "f305d6f9-1ebd-4e56-b248-013e1ac095df",
+    "manufacturer": "Legere",
+    "model": "Classic",
+    "cut": "Unfiled",
+    "material": "Synthetic",
+    "strength_label": "3.50",
+    "data_source": "https://legere.com/products/saxophone-reeds/"
+  },
+  {
+    "id": "7a893b52-8e6b-4c00-bde9-9a4624a302ad",
+    "manufacturer": "Legere",
+    "model": "Studio Cut",
+    "cut": "Unfiled",
+    "material": "Synthetic",
+    "strength_label": "1.50",
+    "data_source": "https://legere.com/products/saxophone-reeds/"
+  },
+  {
+    "id": "b94ae98e-1350-49da-9165-b5340c9f228b",
+    "manufacturer": "Legere",
+    "model": "Studio Cut",
+    "cut": "Unfiled",
+    "material": "Synthetic",
+    "strength_label": "2.00",
+    "data_source": "https://legere.com/products/saxophone-reeds/"
+  },
+  {
+    "id": "241333db-a032-468c-b044-48f559de93f2",
+    "manufacturer": "Legere",
+    "model": "Studio Cut",
+    "cut": "Unfiled",
+    "material": "Synthetic",
+    "strength_label": "2.50",
+    "data_source": "https://legere.com/products/saxophone-reeds/"
+  },
+  {
+    "id": "350d71c7-cffd-4de9-b2eb-b94d627d4683",
+    "manufacturer": "Legere",
+    "model": "Studio Cut",
+    "cut": "Unfiled",
+    "material": "Synthetic",
+    "strength_label": "3.00",
+    "data_source": "https://legere.com/products/saxophone-reeds/"
+  },
+  {
+    "id": "e28fbfc0-4683-4768-9168-af6c1a05aef2",
+    "manufacturer": "Legere",
+    "model": "Studio Cut",
+    "cut": "Unfiled",
+    "material": "Synthetic",
+    "strength_label": "3.50",
+    "data_source": "https://legere.com/products/saxophone-reeds/"
+  },
+  {
+    "id": "d0ca54e9-a0e8-4ab5-9dae-4902e8ae294d",
+    "manufacturer": "Vandoren",
+    "model": "Juno",
+    "cut": "Unfiled",
+    "material": "Cane",
+    "strength_label": "1.5",
+    "data_source": "https://vandoren.fr/en/vandoren-reeds/juno-alto-saxophone-reeds/"
+  },
+  {
+    "id": "6161e5b9-448d-4ce5-8303-70b548564297",
+    "manufacturer": "Vandoren",
+    "model": "Juno",
+    "cut": "Unfiled",
+    "material": "Cane",
+    "strength_label": "2.0",
+    "data_source": "https://vandoren.fr/en/vandoren-reeds/juno-alto-saxophone-reeds/"
+  },
+  {
+    "id": "544afe93-d655-4ecc-85d5-1e612da0a865",
+    "manufacturer": "Vandoren",
+    "model": "Juno",
+    "cut": "Unfiled",
+    "material": "Cane",
+    "strength_label": "2.5",
+    "data_source": "https://vandoren.fr/en/vandoren-reeds/juno-alto-saxophone-reeds/"
+  },
+  {
+    "id": "9bd9c933-9a66-4c05-8dcb-daab43fa0447",
+    "manufacturer": "Vandoren",
+    "model": "Juno",
+    "cut": "Unfiled",
+    "material": "Cane",
+    "strength_label": "3.0",
+    "data_source": "https://vandoren.fr/en/vandoren-reeds/juno-alto-saxophone-reeds/"
+  },
+  {
+    "id": "aead763e-79d4-4c05-9738-ff6fbeac623c",
+    "manufacturer": "Vandoren",
+    "model": "Juno",
+    "cut": "Unfiled",
+    "material": "Cane",
+    "strength_label": "3.5",
+    "data_source": "https://vandoren.fr/en/vandoren-reeds/juno-alto-saxophone-reeds/"
+  },
+  {
+    "id": "532841b8-cf5f-4456-b4c2-ac4b736f11ea",
+    "manufacturer": "Vandoren",
+    "model": "Traditional (Blue Box)",
+    "cut": "Filed",
+    "material": "Cane",
+    "strength_label": "1.0",
+    "data_source": "https://vandoren.fr/en/saxophone-reeds/"
+  },
+  {
+    "id": "0bc89b51-8fd9-4548-b16b-e42c6a8d6fdd",
+    "manufacturer": "Vandoren",
+    "model": "Traditional (Blue Box)",
+    "cut": "Filed",
+    "material": "Cane",
+    "strength_label": "5.0",
+    "data_source": "https://vandoren.fr/en/saxophone-reeds/"
+  },
+  {
+    "id": "b512ae57-8ea4-4cb4-ad32-51fde7d56d60",
+    "manufacturer": "Vandoren",
+    "model": "V12",
+    "cut": "Filed",
+    "material": "Cane",
+    "strength_label": "2.5",
+    "data_source": "https://vandoren.fr/en/saxophone-reeds/"
+  },
+  {
+    "id": "c9947d94-d2d2-40f7-afd3-742fc8b154af",
+    "manufacturer": "Vandoren",
+    "model": "V12",
+    "cut": "Filed",
+    "material": "Cane",
+    "strength_label": "3.0",
+    "data_source": "https://vandoren.fr/en/saxophone-reeds/"
+  },
+  {
+    "id": "40f94472-95cc-4d89-bf3b-f6c3c757f49d",
+    "manufacturer": "Vandoren",
+    "model": "V12",
+    "cut": "Filed",
+    "material": "Cane",
+    "strength_label": "3.5",
+    "data_source": "https://vandoren.fr/en/saxophone-reeds/"
+  },
+  {
+    "id": "89d0704d-533b-4645-8fb4-c1622f03bfe7",
+    "manufacturer": "Vandoren",
+    "model": "V12",
+    "cut": "Filed",
+    "material": "Cane",
+    "strength_label": "4.0",
+    "data_source": "https://vandoren.fr/en/saxophone-reeds/"
+  },
+  {
+    "id": "525cb19f-bc15-4dd3-adcd-e991da59b504",
+    "manufacturer": "Vandoren",
+    "model": "V12",
+    "cut": "Filed",
+    "material": "Cane",
+    "strength_label": "4.5",
+    "data_source": "https://vandoren.fr/en/saxophone-reeds/"
+  },
+  {
+    "id": "82223bfb-16b8-4f99-b569-37a4077d1f30",
+    "manufacturer": "Vandoren",
+    "model": "V12",
+    "cut": "Filed",
+    "material": "Cane",
+    "strength_label": "5.0",
+    "data_source": "https://vandoren.fr/en/saxophone-reeds/"
+  },
+  {
+    "id": "c9dcd16c-8823-4dd1-83b6-d5e335d6c011",
+    "manufacturer": "Vandoren",
+    "model": "V21",
+    "cut": "Unfiled",
+    "material": "Cane",
+    "strength_label": "2.5",
+    "data_source": "https://vandoren.fr/en/saxophone-reeds/"
+  },
+  {
+    "id": "4eceb344-6878-46ab-8b05-792bd2d182d2",
+    "manufacturer": "Vandoren",
+    "model": "V21",
+    "cut": "Unfiled",
+    "material": "Cane",
+    "strength_label": "3.0",
+    "data_source": "https://vandoren.fr/en/saxophone-reeds/"
+  },
+  {
+    "id": "d3aadde9-2bf6-4930-a0ba-aac315d357df",
+    "manufacturer": "Vandoren",
+    "model": "V21",
+    "cut": "Unfiled",
+    "material": "Cane",
+    "strength_label": "3.5",
+    "data_source": "https://vandoren.fr/en/saxophone-reeds/"
+  },
+  {
+    "id": "28fe94c6-1f5c-44be-a436-0f5d53eaa6a1",
+    "manufacturer": "Vandoren",
+    "model": "V21",
+    "cut": "Unfiled",
+    "material": "Cane",
+    "strength_label": "4.0",
+    "data_source": "https://vandoren.fr/en/saxophone-reeds/"
+  },
+  {
+    "id": "d3a6526e-d35d-45ad-a787-39511b94807b",
+    "manufacturer": "Vandoren",
+    "model": "V21",
+    "cut": "Unfiled",
+    "material": "Cane",
+    "strength_label": "4.5",
+    "data_source": "https://vandoren.fr/en/saxophone-reeds/"
+  },
+  {
+    "id": "e5d77dcb-1350-4bb4-bd48-947548f1c6be",
+    "manufacturer": "Vandoren",
+    "model": "V21",
+    "cut": "Unfiled",
+    "material": "Cane",
+    "strength_label": "5.0",
+    "data_source": "https://vandoren.fr/en/saxophone-reeds/"
+  },
+  {
+    "id": "1eb2f664-85c3-4f15-bad9-107f3a2d4354",
+    "manufacturer": "Vandoren",
+    "model": "Java Green",
+    "cut": "Unfiled",
+    "material": "Cane",
+    "strength_label": "1.0",
+    "data_source": "https://vandoren.fr/en/saxophone-reeds/"
+  },
+  {
+    "id": "6cde4dc9-1dbe-4aca-901d-459bbec4910f",
+    "manufacturer": "Vandoren",
+    "model": "Java Red",
+    "cut": "Filed",
+    "material": "Cane",
+    "strength_label": "1.0",
+    "data_source": "https://vandoren.fr/en/vandoren-reeds/java-filed-red-cut-alto-saxophone-reeds/"
+  },
+  {
+    "id": "eba3055e-d115-4da7-afd9-77d4c7b10abf",
+    "manufacturer": "Vandoren",
+    "model": "Java Red",
+    "cut": "Filed",
+    "material": "Cane",
+    "strength_label": "1.5",
+    "data_source": "https://vandoren.fr/en/vandoren-reeds/java-filed-red-cut-alto-saxophone-reeds/"
+  },
+  {
+    "id": "5344f532-67c5-4ee4-b598-22bb6cb2bb1c",
+    "manufacturer": "Vandoren",
+    "model": "Java Red",
+    "cut": "Filed",
+    "material": "Cane",
+    "strength_label": "2.0",
+    "data_source": "https://vandoren.fr/en/vandoren-reeds/java-filed-red-cut-alto-saxophone-reeds/"
+  },
+  {
+    "id": "edaac571-e143-4465-aa00-d213f9d57317",
+    "manufacturer": "Vandoren",
+    "model": "Java Red",
+    "cut": "Filed",
+    "material": "Cane",
+    "strength_label": "2.5",
+    "data_source": "https://vandoren.fr/en/vandoren-reeds/java-filed-red-cut-alto-saxophone-reeds/"
+  },
+  {
+    "id": "5e4a3a59-1664-40cf-a56f-8b6aae62ba9c",
+    "manufacturer": "Vandoren",
+    "model": "Java Red",
+    "cut": "Filed",
+    "material": "Cane",
+    "strength_label": "3.0",
+    "data_source": "https://vandoren.fr/en/vandoren-reeds/java-filed-red-cut-alto-saxophone-reeds/"
+  },
+  {
+    "id": "6fed73bb-a2bf-4981-bd1e-1e5f4da1ad8b",
+    "manufacturer": "Vandoren",
+    "model": "Java Red",
+    "cut": "Filed",
+    "material": "Cane",
+    "strength_label": "3.5",
+    "data_source": "https://vandoren.fr/en/vandoren-reeds/java-filed-red-cut-alto-saxophone-reeds/"
+  },
+  {
+    "id": "4481d378-1b8b-40f9-a7ed-45ec1c7c97db",
+    "manufacturer": "Vandoren",
+    "model": "Java Red",
+    "cut": "Filed",
+    "material": "Cane",
+    "strength_label": "4.0",
+    "data_source": "https://vandoren.fr/en/vandoren-reeds/java-filed-red-cut-alto-saxophone-reeds/"
+  },
+  {
+    "id": "828bb416-e4ba-4e28-ba4e-3ea643171e62",
+    "manufacturer": "Vandoren",
+    "model": "V16",
+    "cut": "Unfiled",
+    "material": "Cane",
+    "strength_label": "1.5",
+    "data_source": "https://vandoren.fr/en/vandoren-reeds/v16-alto-saxophone-reeds/"
+  },
+  {
+    "id": "be220757-2617-4bf4-a6dd-5378f908c3e0",
+    "manufacturer": "Vandoren",
+    "model": "V16",
+    "cut": "Unfiled",
+    "material": "Cane",
+    "strength_label": "2.0",
+    "data_source": "https://vandoren.fr/en/vandoren-reeds/v16-alto-saxophone-reeds/"
+  },
+  {
+    "id": "094569ed-e5e9-4989-a8e9-6f99acdf1468",
+    "manufacturer": "Vandoren",
+    "model": "V16",
+    "cut": "Unfiled",
+    "material": "Cane",
+    "strength_label": "2.5",
+    "data_source": "https://vandoren.fr/en/vandoren-reeds/v16-alto-saxophone-reeds/"
+  },
+  {
+    "id": "a13c6fea-239c-48c5-bb9d-9f919a62dc91",
+    "manufacturer": "Vandoren",
+    "model": "V16",
+    "cut": "Unfiled",
+    "material": "Cane",
+    "strength_label": "3.0",
+    "data_source": "https://vandoren.fr/en/vandoren-reeds/v16-alto-saxophone-reeds/"
+  },
+  {
+    "id": "2f8cfb18-74ce-46a9-aabf-d6a82c6fb3ff",
+    "manufacturer": "Vandoren",
+    "model": "V16",
+    "cut": "Unfiled",
+    "material": "Cane",
+    "strength_label": "3.5",
+    "data_source": "https://vandoren.fr/en/vandoren-reeds/v16-alto-saxophone-reeds/"
+  },
+  {
+    "id": "4fa5e3c3-f43d-43f3-9d04-747f78bec0a4",
+    "manufacturer": "Vandoren",
+    "model": "V16",
+    "cut": "Unfiled",
+    "material": "Cane",
+    "strength_label": "4.0",
+    "data_source": "https://vandoren.fr/en/vandoren-reeds/v16-alto-saxophone-reeds/"
+  },
+  {
+    "id": "38cae2d7-44d8-4ca7-a0ea-7b47cafdbc61",
+    "manufacturer": "Vandoren",
+    "model": "V16",
+    "cut": "Unfiled",
+    "material": "Cane",
+    "strength_label": "5.0",
+    "data_source": "https://vandoren.fr/en/vandoren-reeds/v16-alto-saxophone-reeds/"
+  },
+  {
+    "id": "d811d17a-9dcd-4232-8d28-ababc3d9b0bb",
+    "manufacturer": "Vandoren",
+    "model": "ZZ",
+    "cut": "Filed",
+    "material": "Cane",
+    "strength_label": "1.5",
+    "data_source": "https://vandoren.fr/en/vandoren-reeds/zz-alto-saxophone-reeds/"
+  },
+  {
+    "id": "5313963c-37f4-45e7-ba18-cc37c242a47b",
+    "manufacturer": "Vandoren",
+    "model": "ZZ",
+    "cut": "Filed",
+    "material": "Cane",
+    "strength_label": "2.0",
+    "data_source": "https://vandoren.fr/en/vandoren-reeds/zz-alto-saxophone-reeds/"
+  },
+  {
+    "id": "a7666ed3-072d-4091-b6f5-1b89cf74d707",
+    "manufacturer": "Vandoren",
+    "model": "ZZ",
+    "cut": "Filed",
+    "material": "Cane",
+    "strength_label": "2.5",
+    "data_source": "https://vandoren.fr/en/vandoren-reeds/zz-alto-saxophone-reeds/"
+  },
+  {
+    "id": "ee2742de-1475-4bf3-a5f2-6a4be63bf432",
+    "manufacturer": "Vandoren",
+    "model": "ZZ",
+    "cut": "Filed",
+    "material": "Cane",
+    "strength_label": "3.0",
+    "data_source": "https://vandoren.fr/en/vandoren-reeds/zz-alto-saxophone-reeds/"
+  },
+  {
+    "id": "109a261c-e1b0-484e-bb4f-525cf2afc334",
+    "manufacturer": "Vandoren",
+    "model": "ZZ",
+    "cut": "Filed",
+    "material": "Cane",
+    "strength_label": "3.5",
+    "data_source": "https://vandoren.fr/en/vandoren-reeds/zz-alto-saxophone-reeds/"
+  },
+  {
+    "id": "f2a740c1-e4f3-4fa6-9d41-08ff3a00e08e",
+    "manufacturer": "Vandoren",
+    "model": "ZZ",
+    "cut": "Filed",
+    "material": "Cane",
+    "strength_label": "4.0",
+    "data_source": "https://vandoren.fr/en/vandoren-reeds/zz-alto-saxophone-reeds/"
+  },
+  {
+    "id": "a8281332-fbd1-4b1f-b43d-7c2e8926897c",
+    "manufacturer": "Rigotti",
+    "model": "Gold JAZZ",
+    "cut": "Unfiled",
+    "material": "Cane",
+    "strength_label": "1.0",
+    "data_source": "https://www.rigotti.fr/en/article-rigotti-43-33-7.php"
+  },
+  {
+    "id": "fd1e98ff-bad1-48f7-8d20-c4a15bfcc4d3",
+    "manufacturer": "Rigotti",
+    "model": "Gold JAZZ",
+    "cut": "Unfiled",
+    "material": "Cane",
+    "strength_label": "1.5",
+    "data_source": "https://www.rigotti.fr/en/article-rigotti-43-33-7.php"
+  },
+  {
+    "id": "21a068e2-aaa4-48bb-91e3-c5ed692f8fe8",
+    "manufacturer": "Rigotti",
+    "model": "Gold JAZZ",
+    "cut": "Unfiled",
+    "material": "Cane",
+    "strength_label": "2 Light",
+    "data_source": "https://www.rigotti.fr/en/article-rigotti-43-33-7.php"
+  },
+  {
+    "id": "675e6973-29f6-44dc-b352-e0602390d3f6",
+    "manufacturer": "Rigotti",
+    "model": "Gold JAZZ",
+    "cut": "Unfiled",
+    "material": "Cane",
+    "strength_label": "2 Medium",
+    "data_source": "https://www.rigotti.fr/en/article-rigotti-43-33-7.php"
+  },
+  {
+    "id": "c7d92403-f8db-4a83-b28b-bc6cb2467a5a",
+    "manufacturer": "Rigotti",
+    "model": "Gold JAZZ",
+    "cut": "Unfiled",
+    "material": "Cane",
+    "strength_label": "2 Strong",
+    "data_source": "https://www.rigotti.fr/en/article-rigotti-43-33-7.php"
+  },
+  {
+    "id": "00239f90-23ec-4f22-b77a-48f7abb7004e",
+    "manufacturer": "Rigotti",
+    "model": "Gold JAZZ",
+    "cut": "Unfiled",
+    "material": "Cane",
+    "strength_label": "2.5 Light",
+    "data_source": "https://www.rigotti.fr/en/article-rigotti-43-33-7.php"
+  },
+  {
+    "id": "b6c8015b-7d70-4f6f-8e70-87663577b1fa",
+    "manufacturer": "Rigotti",
+    "model": "Gold JAZZ",
+    "cut": "Unfiled",
+    "material": "Cane",
+    "strength_label": "2.5 Medium",
+    "data_source": "https://www.rigotti.fr/en/article-rigotti-43-33-7.php"
+  },
+  {
+    "id": "6d45767a-04b4-4b46-b327-b5c589a30a62",
+    "manufacturer": "Rigotti",
+    "model": "Gold JAZZ",
+    "cut": "Unfiled",
+    "material": "Cane",
+    "strength_label": "2.5 Strong",
+    "data_source": "https://www.rigotti.fr/en/article-rigotti-43-33-7.php"
+  },
+  {
+    "id": "eb5058ce-d5d6-4180-ba0b-4c221708c6d3",
+    "manufacturer": "Rigotti",
+    "model": "Gold JAZZ",
+    "cut": "Unfiled",
+    "material": "Cane",
+    "strength_label": "3.0 Light",
+    "data_source": "https://www.rigotti.fr/en/article-rigotti-43-33-7.php"
+  },
+  {
+    "id": "ba93cc6d-9ef8-400c-b5a2-220fd117fce7",
+    "manufacturer": "Rigotti",
+    "model": "Gold JAZZ",
+    "cut": "Unfiled",
+    "material": "Cane",
+    "strength_label": "3.0 Medium",
+    "data_source": "https://www.rigotti.fr/en/article-rigotti-43-33-7.php"
+  },
+  {
+    "id": "1ce77ade-72bc-4f07-9bb2-18efdd332b6f",
+    "manufacturer": "Rigotti",
+    "model": "Gold JAZZ",
+    "cut": "Unfiled",
+    "material": "Cane",
+    "strength_label": "3.0 Strong",
+    "data_source": "https://www.rigotti.fr/en/article-rigotti-43-33-7.php"
+  },
+  {
+    "id": "a69de033-9276-41e2-9c1f-ddd1e253f75f",
+    "manufacturer": "Rigotti",
+    "model": "Gold JAZZ",
+    "cut": "Unfiled",
+    "material": "Cane",
+    "strength_label": "3.5 Light",
+    "data_source": "https://www.rigotti.fr/en/article-rigotti-43-33-7.php"
+  },
+  {
+    "id": "cc6b896c-cc18-4748-900a-00456c2a6309",
+    "manufacturer": "Rigotti",
+    "model": "Gold JAZZ",
+    "cut": "Unfiled",
+    "material": "Cane",
+    "strength_label": "3.5 Medium",
+    "data_source": "https://www.rigotti.fr/en/article-rigotti-43-33-7.php"
+  },
+  {
+    "id": "03c5e968-1c1e-4818-8a0a-153e9d14deb5",
+    "manufacturer": "Rigotti",
+    "model": "Gold JAZZ",
+    "cut": "Unfiled",
+    "material": "Cane",
+    "strength_label": "3.5 Strong",
+    "data_source": "https://www.rigotti.fr/en/article-rigotti-43-33-7.php"
+  },
+  {
+    "id": "cf735c87-2ea0-47a2-90f7-00ab029dd0da",
+    "manufacturer": "Rigotti",
+    "model": "Gold JAZZ",
+    "cut": "Unfiled",
+    "material": "Cane",
+    "strength_label": "4.0 Light",
+    "data_source": "https://www.rigotti.fr/en/article-rigotti-43-33-7.php"
+  },
+  {
+    "id": "d5fd771b-1ad3-4d2a-af9e-6bc444f49301",
+    "manufacturer": "Rigotti",
+    "model": "Gold JAZZ",
+    "cut": "Unfiled",
+    "material": "Cane",
+    "strength_label": "4.0 Medium",
+    "data_source": "https://www.rigotti.fr/en/article-rigotti-43-33-7.php"
+  },
+  {
+    "id": "a1bf7713-5220-4ddf-92f1-45f85382fc35",
+    "manufacturer": "Rigotti",
+    "model": "Gold JAZZ",
+    "cut": "Unfiled",
+    "material": "Cane",
+    "strength_label": "4.0 Strong",
+    "data_source": "https://www.rigotti.fr/en/article-rigotti-43-33-7.php"
+  },
+  {
+    "id": "5569beea-ba54-444c-a096-3d514ca62640",
+    "manufacturer": "Rigotti",
+    "model": "Gold JAZZ",
+    "cut": "Unfiled",
+    "material": "Cane",
+    "strength_label": "4.5 Light",
+    "data_source": "https://www.rigotti.fr/en/article-rigotti-43-33-7.php"
+  },
+  {
+    "id": "cb836c45-98d0-4af4-a6c5-5f17ae7cd319",
+    "manufacturer": "Rigotti",
+    "model": "Gold JAZZ",
+    "cut": "Unfiled",
+    "material": "Cane",
+    "strength_label": "4.5 Medium",
+    "data_source": "https://www.rigotti.fr/en/article-rigotti-43-33-7.php"
+  },
+  {
+    "id": "fae4d772-90ac-4d17-829d-c6a48f937280",
+    "manufacturer": "Rigotti",
+    "model": "Gold JAZZ",
+    "cut": "Unfiled",
+    "material": "Cane",
+    "strength_label": "4.5 Strong",
+    "data_source": "https://www.rigotti.fr/en/article-rigotti-43-33-7.php"
+  },
+  {
+    "id": "991e765b-ad32-4970-ac62-b3f0273448b2",
+    "manufacturer": "Rigotti",
+    "model": "Gold JAZZ",
+    "cut": "Unfiled",
+    "material": "Cane",
+    "strength_label": "5.0",
+    "data_source": "https://www.rigotti.fr/en/article-rigotti-43-33-7.php"
+  },
+  {
+    "id": "35fa8a2a-56a1-460e-9385-290ab1dab404",
+    "manufacturer": "Rigotti",
+    "model": "Gold Classic (The Red One)",
+    "cut": "Filed",
+    "material": "Cane",
+    "strength_label": "1.0",
+    "data_source": "https://www.rigotti.fr/en/article-rigotti-42-33-7.php"
+  },
+  {
+    "id": "4e98c89a-0f51-4869-b14b-65e419d48d41",
+    "manufacturer": "Rigotti",
+    "model": "Gold Classic (The Red One)",
+    "cut": "Filed",
+    "material": "Cane",
+    "strength_label": "1.5",
+    "data_source": "https://www.rigotti.fr/en/article-rigotti-42-33-7.php"
+  },
+  {
+    "id": "73bc220b-9090-4136-9db6-635cd46aae54",
+    "manufacturer": "Rigotti",
+    "model": "Gold Classic (The Red One)",
+    "cut": "Filed",
+    "material": "Cane",
+    "strength_label": "2 Light",
+    "data_source": "https://www.rigotti.fr/en/article-rigotti-42-33-7.php"
+  },
+  {
+    "id": "e99583a1-040a-423a-932d-654f09f7837d",
+    "manufacturer": "Rigotti",
+    "model": "Gold Classic (The Red One)",
+    "cut": "Filed",
+    "material": "Cane",
+    "strength_label": "2 Medium",
+    "data_source": "https://www.rigotti.fr/en/article-rigotti-42-33-7.php"
+  },
+  {
+    "id": "c5a1eb1e-4b1d-472c-ba15-2528c060c975",
+    "manufacturer": "Rigotti",
+    "model": "Gold Classic (The Red One)",
+    "cut": "Filed",
+    "material": "Cane",
+    "strength_label": "2 Strong",
+    "data_source": "https://www.rigotti.fr/en/article-rigotti-42-33-7.php"
+  },
+  {
+    "id": "78666088-bac7-4f13-a0c6-ec315c43a488",
+    "manufacturer": "Rigotti",
+    "model": "Gold Classic (The Red One)",
+    "cut": "Filed",
+    "material": "Cane",
+    "strength_label": "2.5 Light",
+    "data_source": "https://www.rigotti.fr/en/article-rigotti-42-33-7.php"
+  },
+  {
+    "id": "0b96d456-71c9-493c-b7e9-7e2a73a224d5",
+    "manufacturer": "Rigotti",
+    "model": "Gold Classic (The Red One)",
+    "cut": "Filed",
+    "material": "Cane",
+    "strength_label": "2.5 Medium",
+    "data_source": "https://www.rigotti.fr/en/article-rigotti-42-33-7.php"
+  },
+  {
+    "id": "2b56a43a-5f74-47b3-b537-98f096386874",
+    "manufacturer": "Rigotti",
+    "model": "Gold Classic (The Red One)",
+    "cut": "Filed",
+    "material": "Cane",
+    "strength_label": "2.5 Strong",
+    "data_source": "https://www.rigotti.fr/en/article-rigotti-42-33-7.php"
+  },
+  {
+    "id": "991e0f01-926d-414a-89fa-d5860f6ace99",
+    "manufacturer": "Rigotti",
+    "model": "Gold Classic (The Red One)",
+    "cut": "Filed",
+    "material": "Cane",
+    "strength_label": "3.0 Light",
+    "data_source": "https://www.rigotti.fr/en/article-rigotti-42-33-7.php"
+  },
+  {
+    "id": "6c6ef35a-36ff-4c3c-86ea-0842178702a5",
+    "manufacturer": "Rigotti",
+    "model": "Gold Classic (The Red One)",
+    "cut": "Filed",
+    "material": "Cane",
+    "strength_label": "3.0 Medium",
+    "data_source": "https://www.rigotti.fr/en/article-rigotti-42-33-7.php"
+  },
+  {
+    "id": "ea9f2cbf-2b09-4435-824f-e624698e3f53",
+    "manufacturer": "Rigotti",
+    "model": "Gold Classic (The Red One)",
+    "cut": "Filed",
+    "material": "Cane",
+    "strength_label": "3.0 Strong",
+    "data_source": "https://www.rigotti.fr/en/article-rigotti-42-33-7.php"
+  },
+  {
+    "id": "23bc0dff-9eae-4486-b79f-a976b87c0396",
+    "manufacturer": "Rigotti",
+    "model": "Gold Classic (The Red One)",
+    "cut": "Filed",
+    "material": "Cane",
+    "strength_label": "3.5 Light",
+    "data_source": "https://www.rigotti.fr/en/article-rigotti-42-33-7.php"
+  },
+  {
+    "id": "31622a4c-7c48-4c01-ba46-7fb30ccb18fb",
+    "manufacturer": "Rigotti",
+    "model": "Gold Classic (The Red One)",
+    "cut": "Filed",
+    "material": "Cane",
+    "strength_label": "3.5 Medium",
+    "data_source": "https://www.rigotti.fr/en/article-rigotti-42-33-7.php"
+  },
+  {
+    "id": "f345299f-4edc-4872-ae23-222bd8203fdf",
+    "manufacturer": "Rigotti",
+    "model": "Gold Classic (The Red One)",
+    "cut": "Filed",
+    "material": "Cane",
+    "strength_label": "3.5 Strong",
+    "data_source": "https://www.rigotti.fr/en/article-rigotti-42-33-7.php"
+  },
+  {
+    "id": "4442f811-2738-4974-bb91-042744b000da",
+    "manufacturer": "Rigotti",
+    "model": "Gold Classic (The Red One)",
+    "cut": "Filed",
+    "material": "Cane",
+    "strength_label": "4.0 Light",
+    "data_source": "https://www.rigotti.fr/en/article-rigotti-42-33-7.php"
+  },
+  {
+    "id": "daa0ce67-1ec3-4f3a-9a68-0e57135d665f",
+    "manufacturer": "Rigotti",
+    "model": "Gold Classic (The Red One)",
+    "cut": "Filed",
+    "material": "Cane",
+    "strength_label": "4.0 Medium",
+    "data_source": "https://www.rigotti.fr/en/article-rigotti-42-33-7.php"
+  },
+  {
+    "id": "c065d024-0e0f-40a0-8000-da4e4e695a74",
+    "manufacturer": "Rigotti",
+    "model": "Gold Classic (The Red One)",
+    "cut": "Filed",
+    "material": "Cane",
+    "strength_label": "4.0 Strong",
+    "data_source": "https://www.rigotti.fr/en/article-rigotti-42-33-7.php"
+  },
+  {
+    "id": "466fa974-01c0-40a7-9df0-2f025e6799e3",
+    "manufacturer": "Rigotti",
+    "model": "Gold Classic (The Red One)",
+    "cut": "Filed",
+    "material": "Cane",
+    "strength_label": "4.5 Light",
+    "data_source": "https://www.rigotti.fr/en/article-rigotti-42-33-7.php"
+  },
+  {
+    "id": "1f77e70e-bc47-4312-a071-3215f6183cb1",
+    "manufacturer": "Rigotti",
+    "model": "Gold Classic (The Red One)",
+    "cut": "Filed",
+    "material": "Cane",
+    "strength_label": "4.5 Medium",
+    "data_source": "https://www.rigotti.fr/en/article-rigotti-42-33-7.php"
+  },
+  {
+    "id": "89281374-9f9c-4b04-88f6-2d904444ae16",
+    "manufacturer": "Rigotti",
+    "model": "Gold Classic (The Red One)",
+    "cut": "Filed",
+    "material": "Cane",
+    "strength_label": "4.5 Strong",
+    "data_source": "https://www.rigotti.fr/en/article-rigotti-42-33-7.php"
+  },
+  {
+    "id": "5e036c4f-00c0-4e28-8c9c-0d8db9a77a74",
+    "manufacturer": "Rigotti",
+    "model": "Gold Classic (The Red One)",
+    "cut": "Filed",
+    "material": "Cane",
+    "strength_label": "5.0",
+    "data_source": "https://www.rigotti.fr/en/article-rigotti-42-33-7.php"
+  },
+  {
+    "id": "98219c6c-7743-4e17-8359-b214731050b0",
+    "manufacturer": "Rigotti",
+    "model": "WILD ONE",
+    "cut": "Unfiled",
+    "material": "Cane",
+    "strength_label": "1.0",
+    "data_source": "https://www.rigotti.fr/en/article-rigotti-796-33-7.php"
+  },
+  {
+    "id": "f49f8886-6a21-45fc-8231-9e1424ace115",
+    "manufacturer": "Rigotti",
+    "model": "WILD ONE",
+    "cut": "Unfiled",
+    "material": "Cane",
+    "strength_label": "1.5",
+    "data_source": "https://www.rigotti.fr/en/article-rigotti-796-33-7.php"
+  },
+  {
+    "id": "bea48f67-a2d6-4cae-afdf-9010942b3378",
+    "manufacturer": "Rigotti",
+    "model": "WILD ONE",
+    "cut": "Unfiled",
+    "material": "Cane",
+    "strength_label": "2.0",
+    "data_source": "https://www.rigotti.fr/en/article-rigotti-796-33-7.php"
+  },
+  {
+    "id": "d9644615-f46a-428f-ac03-29146b9fcf13",
+    "manufacturer": "Rigotti",
+    "model": "WILD ONE",
+    "cut": "Unfiled",
+    "material": "Cane",
+    "strength_label": "2.5",
+    "data_source": "https://www.rigotti.fr/en/article-rigotti-796-33-7.php"
+  },
+  {
+    "id": "a5b58c1c-340d-4feb-a438-ead0062457eb",
+    "manufacturer": "Rigotti",
+    "model": "WILD ONE",
+    "cut": "Unfiled",
+    "material": "Cane",
+    "strength_label": "3.0",
+    "data_source": "https://www.rigotti.fr/en/article-rigotti-796-33-7.php"
+  },
+  {
+    "id": "d6ce057d-e28f-4b20-82c0-3083b0f999a9",
+    "manufacturer": "Rigotti",
+    "model": "WILD ONE",
+    "cut": "Unfiled",
+    "material": "Cane",
+    "strength_label": "3.5",
+    "data_source": "https://www.rigotti.fr/en/article-rigotti-796-33-7.php"
+  },
+  {
+    "id": "0f317f62-7e08-4c69-8426-fcc50255be01",
+    "manufacturer": "Rigotti",
+    "model": "WILD ONE",
+    "cut": "Unfiled",
+    "material": "Cane",
+    "strength_label": "4.0",
+    "data_source": "https://www.rigotti.fr/en/article-rigotti-796-33-7.php"
+  },
+  {
+    "id": "7280becb-917b-45c1-84c4-7f8abf159f37",
+    "manufacturer": "Rigotti",
+    "model": "WILD ONE",
+    "cut": "Unfiled",
+    "material": "Cane",
+    "strength_label": "4.5",
+    "data_source": "https://www.rigotti.fr/en/article-rigotti-796-33-7.php"
+  },
+  {
+    "id": "a17e1781-c797-4036-9dd8-efc155d88d6c",
+    "manufacturer": "Rigotti",
+    "model": "WILD ONE",
+    "cut": "Unfiled",
+    "material": "Cane",
+    "strength_label": "5.0",
+    "data_source": "https://www.rigotti.fr/en/article-rigotti-796-33-7.php"
+  },
+  {
+    "id": "784fa824-1cdb-49d6-9e54-928fcef6ffc1",
+    "manufacturer": "Boston Sax Shop",
+    "model": "Black Label",
+    "cut": "Unfiled",
+    "material": "Cane",
+    "strength_label": "1.5",
+    "data_source": "https://www.bostonsaxshop.com/shop/p/custom-alto-reeds"
+  },
+  {
+    "id": "85e0c587-016f-486a-ba88-347cbc0ad3b1",
+    "manufacturer": "Boston Sax Shop",
+    "model": "Black Label",
+    "cut": "Unfiled",
+    "material": "Cane",
+    "strength_label": "2.0",
+    "data_source": "https://www.bostonsaxshop.com/shop/p/custom-alto-reeds"
+  },
+  {
+    "id": "6a5f19ea-8ca7-411b-a08e-b63b8fd6cb1e",
+    "manufacturer": "Boston Sax Shop",
+    "model": "Black Label",
+    "cut": "Unfiled",
+    "material": "Cane",
+    "strength_label": "2.5",
+    "data_source": "https://www.bostonsaxshop.com/shop/p/custom-alto-reeds"
+  },
+  {
+    "id": "b876713c-903e-496c-8d5b-0cb0ebae7990",
+    "manufacturer": "Boston Sax Shop",
+    "model": "Black Label",
+    "cut": "Unfiled",
+    "material": "Cane",
+    "strength_label": "3.0",
+    "data_source": "https://www.bostonsaxshop.com/shop/p/custom-alto-reeds"
+  },
+  {
+    "id": "14bb3ad3-f8c5-4121-bcb8-083b4487dfdb",
+    "manufacturer": "Boston Sax Shop",
+    "model": "Black Label",
+    "cut": "Unfiled",
+    "material": "Cane",
+    "strength_label": "3.5",
+    "data_source": "https://www.bostonsaxshop.com/shop/p/custom-alto-reeds"
+  },
+  {
+    "id": "af6f2216-e74e-4ed0-95e7-27423ad3d65b",
+    "manufacturer": "Boston Sax Shop",
+    "model": "Black Label",
+    "cut": "Unfiled",
+    "material": "Cane",
+    "strength_label": "4.0",
+    "data_source": "https://www.bostonsaxshop.com/shop/p/custom-alto-reeds"
+  },
+  {
+    "id": "4a46d958-24ae-4d12-8c84-3fe7d680cab7",
+    "manufacturer": "Boston Sax Shop",
+    "model": "Black Label",
+    "cut": "Unfiled",
+    "material": "Cane",
+    "strength_label": "4.5",
+    "data_source": "https://www.bostonsaxshop.com/shop/p/custom-alto-reeds"
+  },
+  {
+    "id": "5d575cd8-5630-453e-bb0c-cb7d3fc57a5e",
+    "manufacturer": "Boston Sax Shop",
+    "model": "Black Label",
+    "cut": "Unfiled",
+    "material": "Cane",
+    "strength_label": "5.0",
+    "data_source": "https://www.bostonsaxshop.com/shop/p/custom-alto-reeds"
+  },
+  {
+    "id": "c313914f-604d-41ff-b35a-cf792810a49a",
+    "manufacturer": "Boston Sax Shop",
+    "model": "Silver Label",
+    "cut": "Unfiled",
+    "material": "Cane",
+    "strength_label": "1.5",
+    "data_source": "https://www.bostonsaxshop.com/shop/p/custom-tenor-reeds-1-rdh56"
+  },
+  {
+    "id": "273c5857-92f2-427b-8a32-b5ef3050a8f1",
+    "manufacturer": "Boston Sax Shop",
+    "model": "Silver Label",
+    "cut": "Unfiled",
+    "material": "Cane",
+    "strength_label": "2.0",
+    "data_source": "https://www.bostonsaxshop.com/shop/p/custom-tenor-reeds-1-rdh56"
+  },
+  {
+    "id": "71fb0436-3fce-43b1-a13f-ecbfcb5f1941",
+    "manufacturer": "Boston Sax Shop",
+    "model": "Silver Label",
+    "cut": "Unfiled",
+    "material": "Cane",
+    "strength_label": "2.5",
+    "data_source": "https://www.bostonsaxshop.com/shop/p/custom-tenor-reeds-1-rdh56"
+  },
+  {
+    "id": "06e4e5ab-bf79-4ef3-bcf2-fc8117cd7455",
+    "manufacturer": "Boston Sax Shop",
+    "model": "Silver Label",
+    "cut": "Unfiled",
+    "material": "Cane",
+    "strength_label": "3.0",
+    "data_source": "https://www.bostonsaxshop.com/shop/p/custom-tenor-reeds-1-rdh56"
+  },
+  {
+    "id": "c976f612-9a13-48ff-befc-895e048c0307",
+    "manufacturer": "Boston Sax Shop",
+    "model": "Silver Label",
+    "cut": "Unfiled",
+    "material": "Cane",
+    "strength_label": "3.5",
+    "data_source": "https://www.bostonsaxshop.com/shop/p/custom-tenor-reeds-1-rdh56"
+  },
+  {
+    "id": "ec71f37a-8a40-43e8-b5ac-76d4251823b8",
+    "manufacturer": "Boston Sax Shop",
+    "model": "Silver Label",
+    "cut": "Unfiled",
+    "material": "Cane",
+    "strength_label": "4.0",
+    "data_source": "https://www.bostonsaxshop.com/shop/p/custom-tenor-reeds-1-rdh56"
+  },
+  {
+    "id": "8c006787-bfb4-4485-a81e-d8f7ccdf87b1",
+    "manufacturer": "Boston Sax Shop",
+    "model": "Silver Label",
+    "cut": "Unfiled",
+    "material": "Cane",
+    "strength_label": "4.5",
+    "data_source": "https://www.bostonsaxshop.com/shop/p/custom-tenor-reeds-1-rdh56"
+  },
+  {
+    "id": "5e93348f-5775-4668-8abc-e180757d9829",
+    "manufacturer": "Boston Sax Shop",
+    "model": "Silver Label",
+    "cut": "Unfiled",
+    "material": "Cane",
+    "strength_label": "5.0",
+    "data_source": "https://www.bostonsaxshop.com/shop/p/custom-tenor-reeds-1-rdh56"
+  },
+  {
+    "id": "a539279e-67ae-4b0f-9f9a-023c98e87b00",
+    "manufacturer": "Boston Sax Shop",
+    "model": "Red Label",
+    "cut": "Unfiled",
+    "material": "Cane",
+    "strength_label": "2.0",
+    "data_source": "https://www.bostonsaxshop.com/shop/p/red-label-alto-reeds"
+  },
+  {
+    "id": "86e9c531-7943-4e44-8d65-e2b3abd8663c",
+    "manufacturer": "Boston Sax Shop",
+    "model": "Red Label",
+    "cut": "Unfiled",
+    "material": "Cane",
+    "strength_label": "2.5",
+    "data_source": "https://www.bostonsaxshop.com/shop/p/red-label-alto-reeds"
+  },
+  {
+    "id": "2d1ae4c6-8fbf-4348-8761-54ee74f28eeb",
+    "manufacturer": "Boston Sax Shop",
+    "model": "Red Label",
+    "cut": "Unfiled",
+    "material": "Cane",
+    "strength_label": "3.0",
+    "data_source": "https://www.bostonsaxshop.com/shop/p/red-label-alto-reeds"
+  },
+  {
+    "id": "4d693d3f-05d9-44ef-8e6b-894b2210e428",
+    "manufacturer": "Boston Sax Shop",
+    "model": "Red Label",
+    "cut": "Unfiled",
+    "material": "Cane",
+    "strength_label": "3.5",
+    "data_source": "https://www.bostonsaxshop.com/shop/p/red-label-alto-reeds"
+  },
+  {
+    "id": "d9fd8a7c-7c50-46c4-9b27-5f20616eb32f",
+    "manufacturer": "Boston Sax Shop",
+    "model": "Red Label",
+    "cut": "Unfiled",
+    "material": "Cane",
+    "strength_label": "4.0",
+    "data_source": "https://www.bostonsaxshop.com/shop/p/red-label-alto-reeds"
+  },
+  {
+    "id": "de73e412-3f01-4d12-9117-e07a437648f0",
+    "manufacturer": "Boston Sax Shop",
+    "model": "Blue Label",
+    "cut": "Filed",
+    "material": "Cane",
+    "strength_label": "1.5",
+    "data_source": "https://www.bostonsaxshop.com/shop/p/blue-label-alto-reeds"
+  },
+  {
+    "id": "bbb9140d-25bc-4677-8d5b-73a4ec80323d",
+    "manufacturer": "Boston Sax Shop",
+    "model": "Blue Label",
+    "cut": "Filed",
+    "material": "Cane",
+    "strength_label": "2.0",
+    "data_source": "https://www.bostonsaxshop.com/shop/p/blue-label-alto-reeds"
+  },
+  {
+    "id": "ff7d9b18-85a6-42da-b144-c98d3ba042e2",
+    "manufacturer": "Boston Sax Shop",
+    "model": "Blue Label",
+    "cut": "Filed",
+    "material": "Cane",
+    "strength_label": "2.5",
+    "data_source": "https://www.bostonsaxshop.com/shop/p/blue-label-alto-reeds"
+  },
+  {
+    "id": "5ae32bc1-e894-4f5c-a9bb-1e22b082a04d",
+    "manufacturer": "Boston Sax Shop",
+    "model": "Blue Label",
+    "cut": "Filed",
+    "material": "Cane",
+    "strength_label": "3.0",
+    "data_source": "https://www.bostonsaxshop.com/shop/p/blue-label-alto-reeds"
+  },
+  {
+    "id": "fd45fb1c-1836-4088-9a2b-4e449c65891e",
+    "manufacturer": "Boston Sax Shop",
+    "model": "Blue Label",
+    "cut": "Filed",
+    "material": "Cane",
+    "strength_label": "3.5",
+    "data_source": "https://www.bostonsaxshop.com/shop/p/blue-label-alto-reeds"
+  },
+  {
+    "id": "5bd86275-076b-4287-8e9c-001d67626f9b",
+    "manufacturer": "Boston Sax Shop",
+    "model": "Blue Label",
+    "cut": "Filed",
+    "material": "Cane",
+    "strength_label": "4.0",
+    "data_source": "https://www.bostonsaxshop.com/shop/p/blue-label-alto-reeds"
+  },
+  {
+    "id": "c55d64f0-c8d9-4b39-81ef-a800bd27e8e9",
+    "manufacturer": "Boston Sax Shop",
+    "model": "Blue Label",
+    "cut": "Filed",
+    "material": "Cane",
+    "strength_label": "4.5",
+    "data_source": "https://www.bostonsaxshop.com/shop/p/blue-label-alto-reeds"
+  },
+  {
+    "id": "a200d038-70f8-46cf-9d8f-82f6c440ec6a",
+    "manufacturer": "Boston Sax Shop",
+    "model": "Blue Label",
+    "cut": "Filed",
+    "material": "Cane",
+    "strength_label": "5.0",
+    "data_source": "https://www.bostonsaxshop.com/shop/p/blue-label-alto-reeds"
+  }
+]

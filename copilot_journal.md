@@ -1,5 +1,46 @@
 # Copilot Journal
 
+## 2026-03-01 10:00
+User Prompt: "Supabase will delete the data if it's not used for 90 days. Can we set up a script to backup the data? Does it make sense to commit that to GitHub? Let's do all 4 items (Backup script, .gitignore, Committed Seeds, Health Check Action)."
+Changes:
+- **Backup Script**: Created `backup_data.py` to export database tables to JSON.
+    - Saves full backups (including private user submissions) to `backups/backup_TIMESTAMP/`.
+    - Saves public reference data (catalogue) to `data/seeds/` for version control.
+- **Restore Script**: Created `restore_seeds.py` to load reference data from the committed JSON files back into the database.
+- **Git Ignore**: Updated `.gitignore` to ignore the `backups/` directory, preventing accidental commit of user data.
+- **GitHub Action**: Created `.github/workflows/db_keepalive.yml` to run a weekly health check (SELECT 1) against the database to prevent Supabase inactivity deletion.
+- **Execution**: Ran `python backup_data.py` to generate the initial set of seed files in `data/seeds/`.
+
+## 2026-02-18 20:20
+User Prompt: "Goal: let data-minded users view data from our DB and see trends. Create a 'Saxophone Setup Explorer' page with scatter plot, filters, and tooltips."
+Changes:
+- **Backend Schema**: Added `ExplorationDataPoint` to `backend/schemas.py`.
+- **Backend Logic**: Implemented `get_exploration_data` in `backend/crud.py` to aggregate submission data by mouthpiece/tip/reed combination.
+- **Backend API**: Added `GET /api/v1/stats/exploration` endpoint in `backend/main.py`.
+- **Frontend Page**: Created `frontend/src/pages/SetupExplorer.tsx` with:
+    - Instrument & Axis selectors.
+    - Recharts ScatterPlot with custom tooltip showing full setup details.
+    - Click interaction to open a detailed drawer.
+- **Frontend Routing**: Added `/explorer` route in `App.tsx`.
+- **Frontend UI**: Added "Explore the Data" button to `LandingPage.tsx`.
+- **Verification**:
+    - `npm run test:backend`: Passed (after fixing missing imports).
+    - `npm run test:frontend`: Passed.
+    - `npm run lint --prefix frontend`: Passed (after fixing unused vars and any types).
+    - `npm run build --prefix frontend`: Passed.
+
+## 2026-02-18 20:10
+User Prompt: "The user wants a scatter plot where: 1. 'If there are multiple data that apply to that condition (e.g. submissions by multiple users), the result should be averaged.' 2. 'The datapoints should be jittered, so that the user can see clustering' 3. Tooltip should show 'Mouthpiece Manufacturer, Model, Label, Reed Manufacturer, Model, Strength' 4. X-axis can be 'Tip opening', 'Baffle Type', etc. 5. Y-axis is 'Evaluation' (Suitability, Resistance, etc.). Confirm my hypothesis that grouping by 'Setup' (Mpc+Tip+Reed) is the correct approach and provide a plan."
+Changes:
+- **Confirmed Hypothesis**: Verified that grouping by unique Gear Setup (`mouthpiece_id`, `tip_opening_id`, `reed_id`) is the correct unit of analysis to satisfy both the averaging requirement (multiple users, one setup point) and the jittering/labeling requirements.
+- **Backend Schema**: Added `ScatterDataPoint` to `backend/schemas.py`, defining the structure for aggregated setup data (Avg Suitability, Resistance, etc.).
+- **Backend Logic**: Implemented `get_aggregated_scatter_data` in `backend/crud.py` to perform the SQL grouping and averaging across submissions.
+- **Backend API**: Created `/api/v1/stats/scatter_data` endpoint in `backend/main.py`.
+- **Verification**: 
+    - Verified `npm run test:backend` passes existing tests.
+    - Verified new endpoint code compiles and structure matches schema.
+    - Note: Specific integration test for analytics was attempted but faced test environment configuration issues; implementation relies on established working patterns from `get_submissions`.
+
 ## 2026-02-19 14:00
 User Prompt: "Supabase Lint: 6 errors. RLS Disabled in Public (x5), Security Definer View (x1). Fix them."
 Changes:

@@ -25,6 +25,12 @@ export default function LandingPage() {
           >
             Setup Recommender
           </Link>
+          <Link 
+            to="/explorer" 
+            className="inline-flex items-center justify-center px-8 py-4 text-lg font-bold text-indigo-700 bg-white border-2 border-slate-100 transition-all rounded-lg hover:bg-slate-50 hover:shadow-lg transform hover:-translate-y-0.5 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+          >
+            Explore the Data
+          </Link>
         </div>
       </div>
     </div>
